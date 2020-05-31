@@ -1,0 +1,1496 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0043)http://robocraft.ru/blog/algorithm/560.html -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ru" xml:lang="ru"><link type="text/css" id="dark-mode" rel="stylesheet" href="http://robocraft.ru/blog/algorithm/560.html"><style type="text/css" id="dark-mode-custom-style"></style><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Нейронная сеть - обучение ИНС с помощью алгоритма обратного распространения / Программирование / RoboCraft. Роботы? Это просто!</title>
+		
+	<meta name="DESCRIPTION" content=" Нейронная сеть — введение Принцип обучения многослойной нейронной сети с помощью алгоритма обратного распространения  Рассмотрим процесс обучения нейронной сети">
+	<meta name="KEYWORDS" content="кибербиология,нейронная сеть,обучение,backpropagation,обратное распространение,ошибка,машинное обучение">
+	
+	<link rel="stylesheet" type="text/css" href="http://robocraft.ru/templates/skin/new/css/style.css?v=1">
+	<!--[if IE 6]><link rel="stylesheet" type="text/css" href="http://robocraft.ru/templates/skin/new/css/ie6.css?v=1" /><![endif]-->
+	<!--[if gte IE 7]><link rel="stylesheet" type="text/css" href="http://robocraft.ru/templates/skin/new/css/ie7.css?v=1" /><![endif]-->	
+	<link rel="stylesheet" type="text/css" href="http://robocraft.ru/templates/skin/new/css/Roar.css">
+	<link rel="stylesheet" type="text/css" href="http://robocraft.ru/templates/skin/new/css/piechart.css">
+	<link rel="stylesheet" type="text/css" href="http://robocraft.ru/templates/skin/new/css/Autocompleter.css">
+	<link rel="stylesheet" type="text/css" href="http://robocraft.ru/templates/skin/new/css/prettify.css">
+	<!--[if gt IE 6]><link rel="stylesheet" type="text/css" href="http://robocraft.ru/templates/skin/new/css/simple_comments.css" /><![endif]-->
+		
+	<link href="http://robocraft.ru/templates/skin/new/images/favicon.ico" rel="shortcut icon">
+	<link rel="search" type="application/opensearchdescription+xml" href="http://robocraft.ru/search/opensearch/" title="RoboCraft. Роботы? Это просто!">
+	
+	<link rel="apple-touch-icon" sizes="57x57" href="http://robocraft.ru/templates/skin/new/icon/apple-icon-57x57.png">
+	<link rel="apple-touch-icon" sizes="60x60" href="http://robocraft.ru/templates/skin/new/icon/apple-icon-60x60.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="http://robocraft.ru/templates/skin/new/icon/apple-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="76x76" href="http://robocraft.ru/templates/skin/new/icon/apple-icon-76x76.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="http://robocraft.ru/templates/skin/new/icon/apple-icon-114x114.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="http://robocraft.ru/templates/skin/new/icon/apple-icon-120x120.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="http://robocraft.ru/templates/skin/new/icon/apple-icon-144x144.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="http://robocraft.ru/templates/skin/new/icon/apple-icon-152x152.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="http://robocraft.ru/templates/skin/new/icon/apple-icon-180x180.png">
+	<link rel="icon" type="image/png" sizes="192x192" href="http://robocraft.ru/templates/skin/new/icon/android-icon-192x192.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="http://robocraft.ru/templates/skin/new/icon/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="http://robocraft.ru/templates/skin/new/icon/favicon-96x96.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="http://robocraft.ru/templates/skin/new/icon/favicon-16x16.png">
+	<link rel="manifest" href="http://robocraft.ru/templates/skin/new/icon/manifest.json">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="http://robocraft.ru/templates/skin/new/icon/ms-icon-144x144.png">
+	<meta name="theme-color" content="#ffffff">
+	
+			<link rel="alternate" type="application/rss+xml" href="http://robocraft.ru/rss/comments/560/" title="Нейронная сеть - обучение ИНС с помощью алгоритма обратного распространения">
+	<script type="text/javascript" src="http://an.yandex.ru/system/context.js" async=""></script><script type="text/javascript" src="http://an.yandex.ru/system/context.js" async=""></script><script type="text/javascript">
+var DIR_WEB_ROOT='http://robocraft.ru';
+var DIR_STATIC_SKIN='http://robocraft.ru/templates/skin/new';
+var BLOG_USE_TINYMCE='';
+</script><style type="text/css">:root img[src*="top.mail.ru/counter?"], :root [alt="Rambler's Top100"], :root .min-width-normal > #popup_container, :root body > iframe[style^="position"][style*="fixed"][id^="iFb"][src^="/?"], :root body > div[id^="dV"][style^="width"][style*="height"][style*="position"][style*="fixed"][style*="overflow"][style*="z-index"][style*="background"], :root a[href*="/ulike.farm"], :root div[class^="yandex_rtb"], :root .stat_pixel_yes[onclick][class*="_layout_"][class*="_format_"], :root .app.blog-post-page #blog-post-item-video-ad, :root object[data^="blob"], :root body > div[class^="_"][class*="Notification "][class$="Notification_stBig"], :root noindex > .search_result[class*="search_result_"], :root img[width="160"][height="600"], :root iframe[src*="trafic-media.ru"], :root iframe[src*="/mixadv_"], :root iframe[src*="/3647.tech"], :root iframe[src*="utraff.com"], :root div[style*="am15.net/img/player_skins"], :root div[id^="traffim-widget"], :root div[id^="republer_"], :root div[id^="news_nest_net_ru"], :root div[id^="news_nest_msk_ru"], :root div[id^="b_tz_"], :root div[id^="advertur_"], :root div[id^="M"][id*="Composite"], :root div[id^="DIV_DA_"], :root div[class^="da-ya-widget"], :root div[class^="da-widget-"], :root div[class^="block_fortress"], :root div[class*="td-a-rec-id-"], :root div[class*="spklw"][data-type="ad"], :root a[onclick*="trtkp.ru"], :root div[id^="news_2xclick_ru_"], :root a[onclick*="offergate-amigo"], :root a[onclick*="n284adserv.com"], :root a[href^="https://kshop"][href*=".pro/"], :root a[href^="http://tds-2.ru"], :root a[href^="http://reals-story.ru/"], :root a[href^="http://olivka.biz/"], :root a[href^="http://kshop.biz/"], :root a[href^="http://browserload.info/"], :root a[href^="http://amigodistrib.ru/dkit-hps/"], :root a[href="http://advert.mirtesen.ru/"], :root a[href*="twtn.ru/"], :root a[href*="tvks.ru"], :root a[href*="trklp.ru"], :root a[href*="top-info24.ru"], :root a[href*="tdstrk.ru"], :root a[href*="slovosil.com"], :root a[href*="shakespoint.com"], :root a[href*="shakesclick.com"], :root iframe[src*="traffic-media.co"], :root a[href*="shakes.pro"], :root a[href*="sandratand.ru"], :root a[href*="rexchange.begun.ru/rclick?"], :root a[href*="retagapp.com"], :root a[href*="tvroff.net"], :root a[href*="refpazus.top"], :root a[href*="re-directme.com"], :root div[id^="zcbclk"], :root a[href*="rapidtor.ru/sb/clk/"], :root a[href*="problogrus.ru"], :root a[href*="octoclick.net"], :root a[href*="nhebd.xyz"], :root a[href*="netcrys.com"], :root a[href*="navaxudoru.com"], :root a[href*="mixadvert.com"], :root a[href*="medinforms.ru"], :root a[href*="media-rotate.com"], :root a[href*="m1cpl.ru"], :root a[href*="litewebbusiness.com"], :root a[href*="lifenews24x7.ru"], :root .min-width-normal > #popup_container ~ #fade, :root a[href*="kshop2.biz"], :root a[href*="please-direct.me"], :root a[href*="katuhus.com"], :root a[href*="joycasino.com/?partner="], :root a[href*="https://relap.io/r?"], :root a[href^="https://prime.rambler.ru/promo/"], :root a[href*="herrabjec.pro"], :root a[href*="flylinks.pw"], :root a[href*="filebase.me"], :root a[href*="feellights.ru"], :root a[href*="cpl11.ru"], :root a[href*="browser-ru.site"], :root a[href*="blogi-novosti.ru"], :root a[href*="blogers-story.ru"], :root a[href*="bgrndi.com"], :root a[href*="bestforexplmdb.com"], :root a[href*="best-zdrav.ru"], :root a[href*="best-zdorovye.ru"], :root a[href*="beauty-list.ru"], :root a[href*="awesomeredirector"], :root a[href*="amigo-biz.ru/ads/click"], :root a[href*="amgfile.ru"], :root a[href*="ads2-adnow.com"], :root a[href*="ads-provider.com"], :root a[href*="://vpnbrowser.ru/"], :root a[href*="://rendersaveron.com"], :root a[href*="://renderbrandium.com"], :root a[href*="://ourbrowser.net"], :root a[href*="://loderkkis.ru"], :root a[href*="://clickstats.pw/"], :root a[href^="http://trafmaster.com"], :root a[href*="://chikidiki.ru"], :root a[href*="://analyticsq.com"], :root div[id^="Crt-"][style], :root a[href*="://adv-views.com"], :root a[href*="/universalsrc.net/"], :root a[href*="/universal-lnk.net/"], :root a[href*="/uni-lnk.com/"], :root a[href*="/uloads.ru/"], :root a[href*="/u-load.ru/"], :root a[href*="/rlink/simptizer/"], :root a[href*="/ribnadzo.ru"], :root a[href*="/onvix.tv/promo/"][target=_blank], :root a[href*="/onvix.me/promo/"][target=_blank], :root a[href*="/ogclick.com/api/redirect"], :root a[href*="/myuniversalnk.net/"], :root a[href*="/myuniversalnk.com/"], :root a[href*="cpl1.ru"], :root a[href*="/kshop3.biz"], :root a[href*="/get-torrent.ru"], :root a[href*="/clubleads.ru"], :root a[href*="/amigo-browser.ru"][target="_blank"], :root a[href*="/onvix.co/promo/"][target=_blank], :root a[href*="/advjump.com"], :root a[href*="//yojlf.com"], :root a[href*="//webbrowser.club/"], :root a[href*="//viruniversal.com/"], :root a[href*="//universalin.info/"], :root a[href*="//universalie.info/"], :root a[href*="//universalice.info/"], :root a[href*="//ubar-pro"], :root a[href*="//tiruniversal.com/"], :root a[href*="//tekaners.com/"], :root a[href*="//spishi.vip/"], :root a[href*="//restofarian.com"], :root a[href*="//reruniversal.com/"], :root a[href*="//portakamus.com/"], :root a[href*="//parandeya.com/"], :root a[href*="://etcodes.com/"], :root a[href*="//offergate.pro/"], :root a[href*="//loderna.ru"], :root a[href*="//loderla.online"], :root a[href*="//historategory.com/"], :root a[href*="//gerocenius.com/"], :root a[href*="//febrare.ru/"], :root a[href*="//ext-load.net"], :root a[href*="//bestonewos.com/"], :root a[href*="//12traffic.ru/"], :root a[href*=".twkv.ru"], :root a[href*=".pokupkins.ru"], :root a[data-href*="recreativ.ru"], :root [src^="//am15.net/?"], :root [onclick*="trklp.ru"], :root [onclick*="/sb/clk/"], :root [onclick*=".twkv.ru"], :root [id^="relap-custom-iframe-rec"], :root [href*="driftawayforfun.com"], :root a[href*="top.24smi.info"], :root [href*="://clickpzk.com/"], :root [href*="/zfvklk.ru"], :root a[href*="/installpack.net"], :root [data-url*="://installpack.net"], :root [data-link*="amigo-browser.ru/dkit-"], :root [data-link*="://ubar-pro"], :root [data-link*="/sb/clk/"], :root [data-leadlink*="admitlead."][data-leadlink*="/sb/clk/"], :root a[href*="beststbuy.ru"], :root a[href*="//universalini.info/"], :root DIV[id^="DIV_NNN_"], :root .mywidget__col > .mywidget__link_advert, :root .base-page_left-side > #left_ban, :root .base-page_container > .banerRight, :root .base-page_center > .banerTopOver, :root a[href^="http://eaplay.ru/"], :root .base-page_center > .banerTop, :root #adv_unisound ~ #main > #slidercontentContainer, :root #adv_unisound ~ #ad_module_cont > [id^="ad_module"], :root #adv_kod_frame ~ #gotimer, :root #MT_overroll ~ div[class][style="left:0px;top:0px;height:480px;width:650px;"], :root ytm-promoted-sparkles-web-renderer, :root ytm-promoted-sparkles-text-search-renderer, :root ytd-promoted-sparkles-text-search-renderer, :root div[class^="mixadvert"], :root a[href^="http://fly-shops.ru"], :root script[src^="http://free-shoutbox.net/app/webroot/shoutbox/sb.php?shoutbox="] + #freeshoutbox_content, :root input[onclick^="window.open('http://www.friendlyduck.com/"], :root input[onclick^="window.open('http://www.FriendlyDuck.com/"], :root iframe[src^="http://static.mozo.com.au/strips/"], :root iframe[name^="google_ads_iframe"], :root iframe[id^="google_ads_iframe"], :root div[role="navigation"] + c-wiz > div > .kxhcC, :root div[jscontroller="U835zd"] + c-wiz[jsrenderer="YnuqN"], :root div[itemtype="http://www.schema.org/WPAdBlock"], :root a[href*="shakesin.com"], :root div[id^="zergnet-widget"], :root div[id^="yandex_ad"], :root div[id^="tms-ad-dfp-"], :root a[onclick*="//msetup.pro/"], :root div[id^="q1-adset-"], :root div[id^="mainads"], :root div[id^="google_dfp_"], :root div[id^="google_ads_iframe_"], :root a[href*="/loaderu.ru/"], :root div[id^="dmRosAdWrapper"], :root div[id^="div_openx_ad_"], :root div[id^="div-gpt-ad"], :root a[href^="https://bongacams"][href*="com/track?"], :root div[id^="div-adtech-ad-"], :root div[id^="div-ads-"], :root div[id^="dfp-ad-"], :root div[id^="crt-"][style], :root div[id^="cns_ads_"], :root div[id^="block-views-topheader-ad-block-"], :root a[href*="trafgid.xyz"], :root div[id^="advt-"], :root div[id^="adspot-"], :root div[itemtype="http://schema.org/WPAdBlock"], :root div[id^="ads300_600-widget"], :root div[id^="ads300_100-widget"], :root div[id^="ads250_250-widget"], :root div[id^="adrotate_widgets-"], :root a[href*="://sub"][href*="bubblesmedia.ru"], :root a[href*="//1xbetlk.site/"], :root div[id^="ad_script_"], :root div[id^="ad_rect_"], :root div[id^="ad_position_"], :root div[id^="ad_head_celtra_"], :root div[id^="ad_bigbox_"], :root div[id^="ad-position-"], :root a[href*="kinqon.ru"], :root a[href*="://bubblevard.com/"], :root div[id^="ad-div-"], :root a[href^="https://msetup.pro"], :root div[data-role="sidebarAd"], :root a[href*="films.ws"], :root div[data-id-advertdfpconf], :root div[data-flt-ve="sponsored_search_ads"], :root #center_col > #taw > #tvcap > .rscontainer, :root div[data-adunit], :root div[data-adunit-path], :root .__yinit .__y_item, :root div[class^="local-feed-banner-ads"], :root a[href*="land-gooods.ru"], :root div[class^="largeRectangleAd_"], :root a[href^="http://www.123-reg.co.uk/affiliate2.cgi"], :root div[class^="index_adBeforeContent_"], :root a[href^="http://www.paddypower.com/?AFF_ID="], :root div[class^="block-openx-"], :root div[id^="lazyad-"], :root #rhs_block > ol > .rhsvw > .kp-blk > .xpdopen > ._OKe > ol > ._DJe > .luhb-div, :root div[class^="advertisement-desktop"], :root div[class^="SponsoredAds"], :root a[href^="http://bodelen.com/"], :root a[href*=".fwd28.com/"], :root div[class^="Display_displayAd"], :root a[href^="http://www.fbooksluts.com/"], :root div[class^="Directory__footerAds"], :root a[href^="http://dethao.com/"], :root div[class^="BlockAdvert-"], :root a[href^="https://a.bestcontentpc.top/"], :root div[class*="-storyBodyAd-"], :root div[class$="dealnews"] > .dealnews, :root aside[itemtype="https://schema.org/WPAdBlock"], :root a[href^="http://bestorican.com/"], :root aside[id^="tn_ads_widget-"], :root a[href*="fortedrow.pro"], :root aside[id^="div-gpt-ad"], :root a[href*=".orange2258.com/"], :root aside[id^="adrotate_widgets-"], :root amp-ad-custom, :root a[href*="://getbrauzer.ru/"], :root a[target="_blank"][onmousedown="this.href^='http://paid.outbrain.com/network/redir?"], :root a[onmousedown^="this.href='http://staffpicks.outbrain.com/network/redir?"][target="_blank"] + .ob_source, :root a[href^="http://affiliates.score-affiliates.com/"], :root a[onmousedown^="this.href='http://paid.outbrain.com/network/redir?"][target="_blank"] + .ob_source, :root a[href*="webdiana.ru/click"], :root ad-desktop-sidebar, :root a[onclick*="//m.economictimes.com/etmack/click.htm"], :root a[href^="https://go.ad2up.com/"], :root a[href^="https://zononi.com/"], :root a[href^="https://www.what-sexdating.com/"], :root a[href^="https://www.travelzoo.com/oascampaignclick/"], :root a[href*="cmsmodnews.com"], :root a[href^="https://www.popads.net/users/"], :root a[href*="/ber-ter.com"], :root a[href^="https://www.passeura.com/"], :root a[href^="https://www.oboom.com/ref/"], :root DFP-AD, :root a[href^="https://www.incredimail.com/?id"], :root a[href^="https://www.iclwy.xyz/"], :root a[href^="https://freeadult.games/"], :root a[href^="https://www.hotgirls4fuck.com/"], :root .mw > #rcnt > #center_col > #taw > #tvcap > .c, :root a[href^="https://www.googleadservices.com/pagead/aclk?"], :root a[href^="http://servicegetbook.net/"], :root a[href^="https://dediseedbox.com/clients/aff.php?"], :root a[href^="https://www.get-express-vpn.com/offer/"], :root [title="uCoz Counter"], :root a[href^="https://www.financeads.net/tc.php?"], :root a[href^="http://click.plista.com/pets"], :root a[href^="https://www.dsct1.com/"], :root a[href^="https://www.clicktraceclick.com/"], :root a[href^="https://www.camyou.com/?cam="][href*="&track="], :root a[href^="https://www.camsoda.com/enter.php?id="], :root a[href^="https://k2s.cc/pr/"], :root a[href^="https://www.brazzersnetwork.com/landing/"], :root iframe[src*="ads.exosrv.com"], :root a[href^="http://at.atwola.com/"], :root a[href^="https://www.bebi.com"], :root a[href^="http://tezfiles.com/pr/"], :root a[href^="https://www.adultempire.com/"][href*="?partner_id="], :root img[width="468"][height="60"], :root a[href^="https://www.adskeeper.co.uk/"], :root a[href^="https://windscribe.com/promo/"], :root a[href*="traflabs.xyz"], :root a[href^="https://watchmygirlfriend.tv/"], :root a[href*="/advertisesimple.info"], :root a[href^="https://vod09197d7.club/"], :root a[href^="https://uncensored3d.com/"], :root a[href*="/api/redirect?offerid="], :root a[href^="https://trust.zone/go/r.php?RID="], :root a[href^="https://trklvs.com/"], :root a[href^="http://www.socialsex.com/"], :root a[href^="https://track.ultravpn.com/"], :root a[href*=".1liveinternet.ru"], :root a[href^="https://track.trkinator.com/"], :root div[class^="awpcp-random-ads"], :root a[href^="https://www.securegfm.com/"], :root a[href^="https://track.healthtrader.com/"], :root a[href^="https://track.afftck.com/"], :root a[href^="http://api.content.ad/"], :root a[href*=".adform.net/"], :root a[href^="https://tour.mrskin.com/"], :root a[href^="https://torguard.net/aff.php"] > img, :root a[href^="http://mo8mwxi1.com/"], :root a[href^="https://tc.tradetracker.net/"] > img, :root a[href^="http://www.firstload.de/affiliate/"], :root a[href^="http://6kup12tgxx.com/"], :root a[href^="https://t.hrtye.com/"], :root a[href^="http://secure.signup-way.com/"], :root a[href^="https://syndication.exoclick.com/splash.php?"], :root a[href^="https://servedbyadbutler.com/"], :root div[class^="Ad__bigBox"], :root a[href*="/adServe/banners?"], :root a[href^="https://secure.bstlnk.com/"], :root a[href*="delivery.trafficfabrik.com"], :root a[href^="http://bc.vc/?r="], :root a[href^="https://retiremely.com/"], :root a[href^="http://tc.tradetracker.net/"] > img, :root a[href^="https://redirect.ero-advertising.com/"], :root a[href^="https://pubads.g.doubleclick.net/"], :root #PopWin[onmousemove], :root div[class^="ad_position_"], :root a[href^="https://prf.hn/click/"][href*="/adref:"], :root a[href^="https://porngames.adult/?SID="], :root a[href^="https://offerforge.net/"], :root a[href^="https://www.nudeidols.com/cams/"], :root a[href^="http://www.uniblue.com/cm/"], :root a[href^="https://lingthatsparleso.info/"], :root a[href^="https://mk-cdn.net/"], :root a[href^="http://www.gamebookers.com/cgi-bin/intro.cgi?"], :root a[href^="https://mk-ads.com/"], :root a[href^="http://bcntrack.com/"], :root .gbfwa > div[class$="_item"], :root a[href^="https://www.im88trk.com/"], :root a[href^="http://track.adform.net/"], :root a[href^="https://medleyads.com/"], :root a[href*="//top.mail.ru/jump?"], :root a[href^="https://mcdlks.com/"], :root a[href^="https://www.goldenfrog.com/vyprvpn?offer_id="][href*="&aff_id="], :root a[href^="https://landing.brazzersnetwork.com/"], :root a[href^="https://land.rk.com/landing/"], :root a[href^="https://jmp.awempire.com/"], :root .GPMV2XEDA2 > .GPMV2XEDP1 > .GPMV2XEDJBB, :root div[class^="backfill-taboola-home-slot-"], :root a[href^="https://incisivetrk.cvtr.io/click?"], :root a[href*="//partners.house/"], :root div[class^="Ad__adContainer"], :root a[href^="https://ilovemyfreedoms.com/"][href*="?affiliate_id="], :root a[href^="http://wopertific.info/"], :root a[href^="https://iactrivago.ampxdirect.com/"], :root div[class^="hp-ad-rect-"], :root a[href^="https://go.trkclick2.com/"], :root a[href^="https://go.stripchat.com/"][href*="&campaignId="], :root a[href^="https://go.onclasrv.com/"], :root a[href^="http://trk.mdrtrck.com/"], :root a[href^="https://googleads.g.doubleclick.net/pcs/click"], :root a[href^="https://farm.plista.com/pets"], :root a[href^="https://easygamepromo.com/ef/custom_affiliate/"], :root a[href^="https://dltags.com/"], :root a[href^="https://clickadilla.com/"], :root a[href^="https://chaturbate.com/affiliates/"], :root AD-TRIPLE-BOX, :root a[href^="https://bs.serving-sys.com"], :root a[href^="https://blackorange.go2cloud.org/"], :root a[onmousedown^="this.href='/wp-content/embed-ad-content/"], :root .GB3L-QEDGY .GB3L-QEDF- > .GB3L-QEDE-, :root a[href^="http://www.drowle.com/"], :root a[href^="https://chaturbate.jjgirls.com/"][href*="?tour="], :root a[href*="/universalsrc.com/"], :root a[href^="https://betway.com/"][href*="&a="], :root div[id^="ADV-SLOT-"], :root a[href^="https://badoinkvr.com/"], :root a[href^="http://apytrc.com/click/"], :root a[href^="https://awejmp.com/"], :root a[href^="http://syndication.exoclick.com/"], :root a[href^="https://awecrptjmp.com/"], :root a[href^="https://adultfriendfinder.com/go/page/landing"], :root div[data-spotim-slot], :root a[href^="https://adsrv4k.com/"], :root a[href^="https://is.ltroute.com/"], :root a[href^="http://putanapartners.com/go."], :root a[href^="https://adserver.adreactor.com/"], :root a[href^="https://keep2share.cc/pr/"], :root a[href*="/fastvk.com"], :root a[href^="https://adclick.g.doubleclick.net/"], :root a[href^="https://ads.trafficpoizon.com/"], :root a[href^="https://ads.ad4game.com/"], :root a[href^="http://ads.affbuzzads.com/"], :root a[href^="https://m.do.co/c/"] > img, :root a[href^="http://record.betsafe.com/"], :root a[href^="https://awentw.com/"], :root a[href^="https://landing1.brazzersnetwork.com"], :root a[href^="https://ad13.adfarm1.adition.com/"], :root a[href^="https://ad.doubleclick.net/"], :root a[href^="https://aaucwbe.com/"], :root a[href^="https://secure.cbdpure.com/aff/"], :root a[href^="https://a.adtng.com/"], :root a[href^="http://adexprt.me/"], :root a[href^="https://8a1ccf65f2b1302.com/"], :root a[href^="http://zevera.com/afi.html"], :root a[href^="http://yads.zedo.com/"], :root .inlineNewsletterSubscription + .inlineNewsletterSubscription div[class$="_item"], :root a[href^="http://xtgem.com/click?"], :root a[href^="http://wxdownloadmanager.com/dl/"], :root a[href^="https://content.oneindia.com/www/delivery/"], :root a[href^="http://www.yourfuckbook.com/?"], :root a[href^="http://www.zergnet.com/i/"], :root div[class^="proadszone-"], :root iframe[id^="republer"], :root a[href^="http://www.xmediaserve.com/"], :root div[class^="AdEmbeded__AddWrapper"], :root a[href^="http://www.usearchmedia.com/signup?"], :root a[href^="http://adf.ly/?id="], :root a[href^="http://www.urmediazone.com/signup"], :root .app.blog-post-page .secondary-header-ad-block, :root a[href^="https://affiliates.bet-at-home.com/processing/"], :root a[href^="http://ad.au.doubleclick.net/"], :root a[href^="http://www.torntv-downloader.com/"], :root .ra[align="right"][width="30%"], :root a[href^="http://www.tirerack.com/affiliates/"], :root div[id^="adpartner-jsunit-"], :root a[href*="sviruniversal.com/"], :root a[href^="http://www.text-link-ads.com/"], :root a[href^="https://track.clickmoi.xyz/"], :root div[data-native_ad], :root a[href^="http://vo2.qrlsx.com/"], :root a[href^="http://www.terraclicks.com/"], :root a[href^="http://www.streamtunerhd.com/signup?"], :root a[href^="//srv.buysellads.com/"], :root a[href^="https://deliver.ptgncdn.com/"], :root a[href^="//oardilin.com/"], :root a[href^="http://www.streamate.com/exports/"], :root a[target="_blank"][href^="http://api.taboola.com/"], :root a[href^="http://www.sfippa.com/"], :root a[href*="/getdriverpack.ru"], :root a[href^="https://www.oboom.com/ad/"], :root a[href^="http://luckiestclick.com/goto."], :root a[href^="http://ad-apac.doubleclick.net/"], :root a[href^="http://www1.clickdownloader.com/"], :root [id^="unit_"] > a[href*="://smi2.ru"], :root .mod > ._jH + .rscontainer, :root #center_col > #main > .dfrd > .mnr-c > .c._oc._zs, :root a[href^="http://www.sex.com/videos/?utm_"], :root div[id^="ads_games_"], :root a[href*="//adretarget.net/"], :root a[href^="http://www.sex.com/pics/?utm_"], :root a[href^="http://c.ketads.com/"], :root a[href^="http://duckcash.eu/"], :root a[href^="http://www.sex.com/?utm_"], :root a[href^="http://server.cpmstar.com/click.aspx?poolid="], :root a[href^="http://www.securegfm.com/"], :root a[href*="intovarro.ru"], :root #rhs_block .mod > .gws-local-hotels__booking-module, :root a[href^="http://www.roboform.com/php/land.php"], :root a[href^="http://www.richducks.com/"], :root a[href^="https://www.friendlyduck.com/AF_"], :root a[href^="https://squren.com/rotator/?atomid="], :root a[href^="http://www.revenuehits.com/"], :root a[href^="http://www.coiwqe.site/"], :root a[href^="http://www.plus500.com/?id="], :root a[href^="http://go.mobisla.com/"], :root .trc_rbox_div .syndicatedItem, :root a[href^="https://secure.adnxs.com/clktrb?"], :root a[href^="http://www.pinkvisualpad.com/?revid="], :root a[href^="https://members.linkifier.com/public/affiliateLanding?refCode="], :root a[href^="http://www.pinkvisualgames.com/?revid="], :root aside[id^="advads_ad_widget-"], :root [title="uWeb Counter"], :root a[href^="https://topoffers.com/"][href*="/?pid="], :root a[href^="http://www.on2url.com/app/adtrack.asp"], :root a[href^="http://www.myvpn.pro/"], :root a[href*=".braun634.com/"], :root a[href^="http://www.myfreecams.com/?co_id="][href*="&track="], :root a[href^="http://www.my-dirty-hobby.com/?sub="], :root iframe[src*="mellowads.com"], :root a[href^="http://callville.xyz/"], :root a[href^="http://www.seekbang.com/cs/"], :root a[href^="http://bs.serving-sys.com/"], :root a[href^="http://www.menaon.com/installs/"], :root a[href^="http://adtransfer.net/"], :root a[href^="https://www.spyoff.com/"], :root a[href^="http://www.linkbucks.com/referral/"], :root a[href^="http://www.incredimail.com/?id="], :root a[href^="http://onclickads.net/"], :root a[href^="http://www.incredimail.com/?id"], :root a[href^="http://www.ragazzeinvendita.com/?rcid="], :root body > #__promoStickyButton, :root a[href^="http://www.graboid.com/affiliates/"], :root #index > .news_not_adv, :root #cnt #center_col > #res > #topstuff > .ts, :root a[href^="http://www.getyourguide.com/?partner_id="], :root div[id^="CGCandy"], :root a[href^="http://www.friendlyduck.com/AF_"], :root a[href^="http://www.friendlyadvertisements.com/"], :root a[href^="http://www.fpcTraffic2.com/blind/in.cgi?"], :root a[href^="http://www.fleshlight.com/"], :root a[href^="http://amigodistr.ru/"], :root a[href^="http://www.get-express-vpn.xyz/offer/"], :root a[href^="http://www.flashx.tv/downloadthis"], :root a[href^="http://www.firstload.com/affiliate/"], :root a[style="display:block;width:300px;min-height:250px"][href^="http://li.cnet.com/click?"], :root #MAIN.ShowTopic > .ad, :root a[href^="http://www.ducksnetwork.com/"], :root a[href*="advertwebgid.ru"], :root a[href*="://clickstats.online/"], :root a[href^="https://click.plista.com/pets"], :root iframe[src*="laim.tv/rotator/"], :root a[href*=".approvallamp.club/"], :root a[href^="http://www.downloadweb.org/"], :root div[style="width: 252px; height: 450px; position: fixed; right: 0px; top: 0px; overflow: hidden; z-index: 10000;"], :root div[class^="gemini-ad"], :root a[href*="ex.24smi.info"], :root a[href^="http://secure.cbdpure.com/aff/"], :root a[href^="https://trafficmedia.center/"], :root a[href^="http://www.downloadthesefiles.com/"], :root div[data-id^="div-gpt-ad-"], :root a[href*="/vkout.ru"], :root a[href^="http://www.downloadplayer1.com/"], :root a[href*=".ichlnk.com/"], :root a[href^="http://www.myfreepaysite.com/sfw_int.php?aid"], :root a[href^="http://www.dealcent.com/register.php?affid="], :root a[href^="http://reallygoodlink.extremefreegames.com/"], :root a[href^="http://www.coinducks.com/"], :root a[href*="//loderlx.ru"], :root a[href^="http://www.clkads.com/adServe/"], :root a[href^="http://www.bet365.com/"][href*="&affiliate="], :root a[href^="http://fusionads.net"], :root a[href^="http://www.cash-duck.com/"], :root .trc_rbox_border_elm .syndicatedItem, :root a[href^="http://www.badoink.com/go.php?"], :root a[href^="http://www.babylon.com/welcome/index?affID"], :root a[href^="http://www.amazon.co.uk/exec/obidos/external-search?"], :root a[href^="http://www.afgr3.com/"], :root a[href*="trtkp.ru"], :root a[href^="http://srvpub.com/"], :root a[href^="https://cpmspace.com/"], :root a[href*="/newbrowser.club/"], :root a[href^="http://www.afgr2.com/"], :root div[id^="drudge-column-ads-"], :root a[href^="http://www.adxpansion.com"], :root iframe[id^="google_ads_frame"], :root a[href^="http://www.greenmangaming.com/?tap_a="], :root a[href^="http://www.adultdvdempire.com/?partner_id="][href*="&utm_"], :root a[href^="http://www.adskeeper.co.uk/"], :root a[href^="https://transfer.xe.com/signup/track/redirect?"], :root .mw > #rcnt > #center_col > #taw > .c, :root a[href^="https://sexdatingz.live/"], :root a[href^="http://wgpartner.com/"], :root a[href^="http://webtrackerplus.com/"], :root a[href^="http://webgirlz.online/landing/"], :root a[href^="http://web.adblade.com/"], :root a[href^="https://bullads.net/get/"], :root iframe[src*="://vidroll.ru/"], :root a[href^="https://my-movie.club/"], :root a[href^="https://adhealers.com/"], :root a[href^="http://www.duckcash.eu/"], :root a[href^="http://adserver.adreactor.com/"], :root a[href^="http://uploaded.net/ref/"], :root div[id^="smi2adblock_"], :root a[href*="//ridingintractable.com/"], :root a[href^="http://ad.doubleclick.net/"], :root a[href^="http://ul.to/ref/"], :root a[href^="https://understandsolar.com/signup/?lead_source="][href*="&tracking_code="], :root a[href^="https://www.mrskin.com/tour"], :root a[href^="https://www.arthrozene.com/"][href*="?tid="], :root a[href^="http://track.trkvluum.com/"], :root a[href*="//universalse.info/"], :root a[href^="http://www.moneyducks.com/"], :root a[href^="https://intrev.co/"], :root a[href^="http://track.incognitovpn.com/"], :root a[href^="http://tour.mrskin.com/"], :root a[href*="//ubar.pro"], :root a[href^="http://tour.affbuzzads.com/"], :root [onclick^="window.open('window.open('//delivery.trafficfabrik.com/"], :root div[class^="lifeOnwerAd"], :root a[href^="http://www.bitlord.me/share/"], :root a[href^="http://www.down1oads.com/"], :root a[href^="http://t.wowtrk.com/"], :root a[href^="https://refpaano.host/"], :root a[href^="http://t.mdn2015x3.com/"], :root div[class^="AdhesionAd_"], :root a[href^="http://t.mdn2015x2.com/"], :root a[href*="gocdn.ru"], :root a[href^="http://www.friendlyquacks.com/"], :root a[href^="http://bluehost.com/track/"], :root a[href^="http://www.download-provider.org/"], :root a[href*="//universalut.info/"], :root a[href^="http://traffic.tc-clicks.com/"], :root a[href^="http://spygasm.com/track?"], :root a[href^="http://adserving.unibet.com/"], :root a[href^="http://www.cdjapan.co.jp/aff/click.cgi/"], :root a[href^="http://www.wantstraffic.com/"], :root a[href^="http://www.hibids10.com/"], :root a[href^="http://www.fducks.com/"], :root a[href^="http://adsrv.keycaptcha.com"], :root a[href^="http://track.affiliatenetwork.co.za/"], :root a[href^="http://serve.williamhill.com/promoRedirect?"], :root a[href^="http://pubads.g.doubleclick.net/"], :root a[href^="https://ad.atdmt.com/"], :root a[href^="http://semi-cod.com/clicks/"], :root div[role="navigation"] + c-wiz > script + div > .kxhcC, :root a[href^="http://see-work.info/"], :root a[href^="https://uncensored.game/"], :root a[href^="http://secure.hostgator.com/~affiliat/"], :root a[href^="https://chaturbate.com/in/?track="], :root a[href^="http://searchtabnew.com/"], :root a[href^="http://vinfdv6b4j.com/"], :root a[href^="https://t.grtyi.com/"], :root a[href^="http://s5prou7ulr.com/"], :root AD-SLOT, :root #rhs_block > #mbEnd, :root a[href^="http://promos.bwin.com/"], :root a[href^="http://play4k.co/"], :root [onclick*="content.ad/"], :root a[href^="//4c7og3qcob.com/"], :root div[id^="ad-gpt-"], :root a[href^="http://partner.sbaffiliates.com/"], :root a[href^="https://spygasm.com/track?"], :root a[href^="http://papi.mynativeplatform.com:80/pub2/"], :root a[href*="gpclick.ru"], :root #cnt #center_col > #taw > #tvcap > .c._oc._Lp, :root a[href^="http://cdn.adstract.com/"], :root a[href^="http://buysellads.com/"], :root a[href^="http://n217adserv.com/"], :root a[href^="http://n.admagnet.net/"], :root a[href^="http://mob1ledev1ces.com/"], :root a[href*="://et-cod.com/"], :root a[href^="http://secure.signup-page.com/"], :root div[data-crl="true"][data-id^="CarouselPLA-"], :root a[href^="http://linksnappy.com/?ref="], :root a[href^="http://keep2share.cc/pr/"], :root a[href*="marketgid.com/"], :root [id^="newPortal_informer_"], :root .widget-pane-section-result[data-result-ad-type], :root a[href^="http://imads.integral-marketing.com/"], :root .i-bem.b-timetable__row[onclick*="awaps"], :root a[href^="http://liversely.com/"], :root a[href^="http://tracking.toroadvertising.com/"], :root a[href*="?adlivk="][href*="&refer="], :root a[href^="http://https://www.get-express-vpn.com/offer/"], :root a[href^="http://guideways.info/"], :root a[href*="go.ad2up.com"], :root a[href^="http://goldmoney.com/?gmrefcode="], :root .commercial-unit-mobile-top .jackpot-main-content-container > .UpgKEd + .nZZLFc > div > .vci, :root a[href^="http://go.trafficshop.com/"], :root a[href*=".adk2x.com/"], :root a[href*="//do-rod.com/"], :root ADS-RIGHT, :root a[href^="http://go.seomojo.com/tracking202/"], :root a[href*="wow-partners.com/click.php"], :root #rhs_block > .ts[cellspacing="0"][cellpadding="0"][style="padding:0"], :root a[href^="http://go.oclaserver.com/"], :root bottomadblock, :root a[href^="http://go.ad2up.com/"], :root img[src^="/stat/"][width="88"][height="31"], :root a[href^="http://galleries.securewebsiteaccess.com/"], :root a[href^="http://sharesuper.info/"], :root a[href^="http://fileloadr.com/"], :root a[href^="http://www.affiliates1128.com/processing/"], :root a[data-redirect^="this.href='http://paid.outbrain.com/network/redir?"], :root a[href^="http://ffxitrack.com/"], :root #rhswrapper > #rhssection[border="0"][bgcolor="#ffffff"], :root [id*="MGWrap"], :root a[href*="pussl3.com"], :root a[href^="https://track.52zxzh.com/"], :root a[href^="https://bnsjb1ab1e.com/"], :root a[href^="http://marketgid.com"], :root a[href^="http://feeds1.validclick.com/"], :root a[href^="http://eclkmpsa.com/"], :root img[width="728"][height="90"], :root a[href^="http://look.djfiln.com/"], :root a[href^="http://feedads.g.doubleclick.net/"], :root a[href*="/eversaree.bid"], :root a[href^="http://farm.plista.com/pets"], :root a[href^="http://www.clickansave.net/"], :root a[href^="http://extra.bet365.com/"][href*="?affiliate="], :root FBS-AD, :root a[href^="http://ethfw0370q.com/"], :root a[href^="http://elitefuckbook.com/"], :root a[href^="http://earandmarketing.com/"], :root a[href^="http://pan.adraccoon.com?"], :root a[href^="https://ads-for-free.com/click.php?"], :root a[href^="https://paid.outbrain.com/network/redir?"], :root a[href^="http://refer.webhostingbuzz.com/"], :root a[href^="//www.mgid.com/"], :root a[href^="https://flirtaescopa.com/"], :root a[href^="http://pokershibes.com/index.php?ref="], :root a[href^="http://lp.ezdownloadpro.info/"], :root div[id^="cpa_rotator_block"], :root a[href^="http://dwn.pushtraffic.net/"], :root .GFYY1SVD2 > .GFYY1SVC2 > .GFYY1SVF5, :root a[href*="//tranqvilius.com/"], :root img[alt^="Fuckbook"], :root a[href^="http://adrunnr.com/"], :root a[href^="http://lp.ncdownloader.com/"], :root a[href^="http://www.webtrackerplus.com/"], :root div[id^="tizerws_"], :root a[href*="//advtise.ru/"], :root a[href^="http://download-performance.com/"], :root a[href^="http://down1oads.com/"], :root object[data*="ads.com/clk.swf"], :root .Mpopup + #Mad > #MadZone, :root a[href*="/sarimsolus.com/"], :root a[href^="http://refpa.top/"], :root a[href^="https://gghf.mobi/"], :root a[href*=".qertewrt.com/"], :root .base-page_center > .banerBottom, :root a[href^="http://dftrck.com/"], :root a[href^="http://databass.info/"], :root a[href^="http://www.firstclass-download.com/"], :root div[id^="YFBMSN"], :root a[href^="http://install.securewebsiteaccess.com/"], :root a[data-url^="http://paid.outbrain.com/network/redir?"] + .author, :root a[href^="http://hyperlinksecure.com/go/"], :root div > [class][onclick*=".updateAnalyticsEvents"], :root a[href^="https://gogoman.me/"], :root a[href^="http://www.adbrite.com/mb/commerce/purchase_form.php?"], :root a[href^="http://freesoftwarelive.com/"], :root a[href^="http://engine.newsmaxfeednetwork.com/"], :root a[href^="http://data.linoleictanzaniatitanic.com/"], :root a[href^="//awejmp.com/"], :root a[href^="http://d2.zedo.com/"], :root a[href^="http://igromir.info/"], :root a[href*="kodielinktrust.ru"], :root a[href*="=exoclick"], :root a[href^="http://a63t9o1azf.com/"], :root a[href^="http://cpaway.afftrack.com/"], :root a[href^="http://clkmon.com/adServe/"], :root div[id^="gnezdo_ru_"], :root a[href^="http://clickserv.sitescout.com/"], :root a[href^="http://clickandjoinyourgirl.com/"], :root .ch[onclick="ga(this,event)"], :root a[href^="http://chaturbate.com/affiliates/"], :root a[href^="http://centertrust.xyz/"], :root [href^="http://advertisesimple.info/"], :root a[href^="http://cdn3.adexprts.com/"], :root div[class^="ad_border_"], :root a[href^="//5e1fcb75b6d662d.com/"], :root a[href^="http://campaign.bharatmatrimony.com/cbstrack/"], :root a[href*="/afftraf.co/"], :root div[id^="ad-cid-"], :root a[href^="http://cdn.adsrvmedia.net/"], :root a[href^="http://mgid.com/"], :root a[href^="http://cinema.friendscout24.de?"], :root a[href*="down-news-games.ru"], :root a[href^="http://casino-x.com/?partner"], :root div[class^="ads-partner-"], :root a[href^="http://campaign.bharatmatrimony.com/track/"], :root #BlWrapper > .b-temp_rbc, :root AFS-AD, :root a[href^="http://contractallsticker.net/"], :root a[href*="realgoodies.ru"], :root .commercial-unit-desktop-rhs > .iKidV > .Ee92ae + .P2mpm + .hp3sk, :root a[href^="http://c.jumia.io/"], :root [href*="//loadbrowser.ru/"], :root a[href^="http://c.actiondesk.com/"], :root div[class^="AdBannerWrapper-"], :root a[href^="https://www.mypornstarcams.com/landing/click/"], :root a[href^="http://media.paddypower.com/redirect.aspx?"], :root a[href^="http://www.brightwheel.info/"], :root a[href^="http://betahit.click/"], :root [lazy-ad="leftthin_banner"], :root a[href*=".opskln.com/"], :root a[href^="https://rev.adsession.com/"], :root div[id^="acm-ad-tag-"], :root a[href^="http://tracking.deltamediallc.com/"], :root a[href^="http://azmobilestore.co/"], :root #assetsListings[style="display: block;"], :root a[href^="http://bestchickshere.com/"], :root a[href^="http://bcp.crwdcntrl.net/"], :root a[href^="https://porndeals.com/?track="], :root a[href^="http://finaljuyu.com/"], :root a[href^="http://adprovider.adlure.net/"], :root a[href^="http://banners.victor.com/processing/"], :root a[href*="turbotraf.com"], :root ytd-compact-promoted-video-renderer, :root a[href^="https://playuhd.host/"], :root [src^="/Redirect.a2b?"], :root div[class*="_AdInArticle_"], :root a[href^="http://y1jxiqds7v.com/"], :root a[href^="http://taboola-"][href*="/redirect.php?app.type="], :root a[href*=".clksite.com/"], :root a[href^="http://b.bestcompleteusa.info/"], :root a[href*="thor-media.ru/click/"], :root a[href*="goext.info"], :root a[href*=".udncoeln.com/"], :root a[onclick*="/link-fes.ru"], :root a[href^="http://aff.ironsocket.com/"], :root #root > .app > #layout > #very-right-column .aggregator__header, :root a[href^="http://www.ireel.com/signup?ref"], :root a[href^="https://www.firstload.com/affiliate/"], :root a[href^="http://adultgames.xxx/"], :root a[href*="trk-1.com"], :root a[href^="http://s9kkremkr0.com/"], :root #content > #right > .dose > .dosesingle, :root a[href^="http://adserver.adtech.de/"], :root a[href^="http://rekoverr.com/"], :root div[id^="sblock_inform_"], :root a[href^="http://adtrackone.eu/"], :root div[id^="traffective-ad-"], :root a[href^="http://adtrack123.pl/"], :root a[href^="http://greensmoke.com/"], :root #flowplayer > div[style="position: absolute; width: 300px; height: 275px; left: 222.5px; top: 85px; z-index: 999;"], :root .vi-lb-placeholder[title="ADVERTISEMENT"], :root a[href^="http://join3.bannedsextapes.com/track/"], :root a[data-url^="http://paid.outbrain.com/network/redir?"], :root a[href^="https://www.adxtro.com/"], :root a[href^="http://www.gfrevenge.com/landing/"], :root a[href^="http://adserver.adtechus.com/"], :root #center_col > #resultStats + #tads, :root a[href^="http://easydownload4you.com/"], :root a[href^="http://ads2.williamhill.com/redirect.aspx?"], :root a[href^="http://www.duckssolutions.com/"], :root a[href^="http://ads.betfair.com/redirect.aspx?"], :root a[href*="kingoablc.com"], :root a[href^="http://adlev.neodatagroup.com/"], :root a[href^="http://adfarm.mediaplex.com/"], :root [id^="adframe_wrap_"], :root a[href^="http://adclick.g.doubleclick.net/"], :root a[href^="http://www.freefilesdownloader.com/"], :root a[href^="https://mob1ledev1ces.com/"], :root a[href^="http://9nl.es/"], :root a[href^="http://affiliate.glbtracker.com/"], :root div[id^="proadszone-"], :root a[href^="http://record.sportsbetaffiliates.com.au/"], :root a[href^="http://anonymous-net.com/"], :root a[href^="http://ad.yieldmanager.com/"], :root div[id^="ads300_250-widget"], :root a[href^="http://aflrm.com/"], :root a[href^=" http://n47adshostnet.com/"], :root a[href^="http://wct.link/"], :root a[href^="http://ad-emea.doubleclick.net/"], :root a[href*="//universalies.info/"], :root .ob_container .item-container-obpd, :root a[href^="http://click.payserve.com/"], :root c-wiz[jsrenderer="YnuqN"] > div > div > .Rn1jbe, :root div[id^="admixer_"], :root #rhs_block .xpdopen > ._OKe > div > .mod > ._yYf, :root .rscontainer > .ellip, :root a[href^="http://a.adquantix.com/"], :root a[href^="http://googleads.g.doubleclick.net/pcs/click"], :root a[href^="http://fsoft4down.com/"], :root .__zinit .__y_item, :root a[href^="http://online.ladbrokes.com/promoRedirect?"], :root a[href^="http://4c7og3qcob.com/"], :root a[href^="http://www.hitcpm.com/"], :root a[href^="http://45eijvhgj2.com/"], :root div[id^="trafmag_"], :root a[href^="http://3wr110.net/"], :root a[href*=".orgsales.ru"], :root div[class^="adbanner_"], :root a[href^="http://glprt.ru/affiliate/"], :root a[href^="http://1phads.com/"], :root a[href^="https://fonts.fontplace9.com/"], :root a[href^="http://affiliate.coral.co.uk/processing/"], :root a[href^="//www.pd-news.com/"], :root a[href^="https://t.mobtya.com/"], :root a[href^="//voyeurhit.com/cs/"], :root a[href^="//pubads.g.doubleclick.net/"], :root a[onmousedown^="this.href='https://paid.outbrain.com/network/redir?"][target="_blank"] + .ob_source, :root a[href^="https://deliver.tf2www.com/"], :root a[href^="//porngames.adult/?SID="], :root a[href^="http://www.easydownloadnow.com/"], :root div[data-ad-underplayer], :root a[href^="http://cdn3.adbrau.com/"], :root [id^="unit_"] > a[href*="://smi2.net"], :root a[href^="https://chaturbate.xyz/"], :root a[href^="//mob1ledev1ces.com/"], :root ytd-video-masthead-ad-v3-renderer, :root a[href^="http://refpaano.host/"], :root a[href*="//adoffer.pro/"], :root a[href^="//zenhppyad.com/"], :root a[href^="//nlkdom.com/"], :root a[href^="//ads.ad-center.com/"], :root a[href*=".red90121.com/"], :root a[href^="http://traderstart.mirtesen.ru"], :root div[id^="sticky_ad_"], :root a[href^="//look.djfiln.com/"], :root a[href^="http://hpn.houzz.com/"], :root #mn #center_col > div > h2.spon:first-child, :root .plistaList > .plista_widget_underArticle_item[data-type="pet"], :root a[href^="//jsmptjmp.com/"], :root a[href^="http://www.liutilities.com/"], :root a[href^="//go.onclasrv.com/"], :root a[onmousedown^="this.href='http://paid.outbrain.com/network/redir?"][target="_blank"], :root a[href^="http://ads.sprintrade.com/"], :root a[href^="//z6naousb.com/"], :root .header-banner > #moneyback[target="_blank"], :root a[href^="https://www.oneclickroot.com/?tap_a="] > img, :root a[href*="a2g-secure.com"], :root .commercial-unit-mobile-top .jackpot-main-content-container > .UpgKEd + .nZZLFc > .vci, :root div[id^="advads_"], :root div[class^="ResponsiveAd-"], :root #content > #center > .dose > .dosesingle, :root #\5f _mom_ad_12, :root a[href*="tvkw.ru"], :root a[href^="//db52cc91beabf7e8.com/"], :root a[href^="http://latestdownloads.net/download.php?"], :root .nrelate .nr_partner, :root [ad-id^="googlead"], :root a[href^="//bwnjijl7w.com/"], :root a[href^="https://goraps.com/"], :root [id^="bunyad_ads_"], :root .trc_rbox .syndicatedItem, :root a[href^="https://www.juicer.io?referrer="], :root a[href^="http://cwcams.com/landing/click/"], :root a[href*="cpagetti1.com"], :root a[href^="http://affiliates.pinnaclesports.com/processing/"], :root a[href^="http://get.slickvpn.com/"], :root a[href*="//avertise.ru/"], :root a[href^="//api.ad-goi.com/"], :root .ob_dual_right > .ob_ads_header ~ .odb_div, :root a[href*="shakescash.com"], :root a[href^="//adbit.co/?a=Advertise&"], :root div[id^="beroll_rotator"], :root a[href^="//88d7b6aa44fb8eb.com/"], :root a[href^="http://tracker.mybroadband.co.za/"], :root a[href*="/yfiles1.ru"], :root a[href^="//4f6b2af479d337cf.com/"], :root a[href^="//40ceexln7929.com/"], :root a[href^="http://pwrads.net/"], :root a[href*="googleme.eu"], :root a[href^="//00ae8b5a9c1d597.com/"], :root a[href*="info-blog24.ru"], :root a[href^="http://hd-plugins.com/download/"], :root a[href^="http://datxxx.com"], :root a[href^="http://NowDownloadAll.com"], :root a[href^=" http://www.sex.com/"][href*="&utm_"], :root a[href*="ftpglst.com"], :root a[href*="onclkds."], :root a[href*="verismediya.ru/sb/clk/"], :root div[id^="adfox_"], :root a[href^="http://k2s.cc/code/"], :root .ra[width="30%"][align="right"] + table[width="70%"][cellpadding="0"], :root a[href*="//bongacams.com/track?"], :root a[data-oburl^="http://paid.outbrain.com/network/redir?"], :root a[href*="mfroute.com/"], :root a[href*=".smartadserver.com"], :root .rhsvw[style="background-color:#fff;margin:0 0 14px;padding-bottom:1px;padding-top:1px;"], :root #rhs_block > script + .c._oc._Ve.rhsvw, :root a[href*="emprestimo.eu"], :root a[href^="http://www.quick-torrent.com/download.html?aff"], :root a[href*="=Adtracker"], :root ytd-promoted-sparkles-web-renderer, :root div[id^="ads120_600-widget"], :root a[href^="http://ads.ad-center.com/"], :root a[href*="/adrotate-out.php?"], :root a[href^="http://www.torntvdl.com/"], :root a[href^="http://hyperies.info/"], :root [href*="/vaigowoa.com"], :root a[href^="http://amzn.to/"] > img[src^="data"], :root a[href*="//bongacams2.com/track?"], :root a[href*="admitlead."][href*="/sb/clk/"], :root iframe[src^="http://ad.yieldmanager.com/"], :root a[href^="http://www.fonts.com/BannerScript/"], :root a[onmousedown^="this.href='https://paid.outbrain.com/network/redir?"][target="_blank"], :root a[href*="//3wr110.xyz/"], :root #center_col > div[style="font-size:14px;margin-right:0;min-height:5px"] > div[style="font-size:14px;margin:0 4px;padding:1px 5px;background:#fff8e7"], :root a[href^="https://tracking.truthfinder.com/?a="], :root a[href*=".purple6401.com/"], :root div[aria-label="Ads"], :root a[href*="/universallnk.net/"], :root a[href^="http://landingpagegenius.com/"], :root a[href*="://new.torrent-pack.ru/"], :root a[href*=".irtyc.com/"], :root a[href*=".inclk.com/"] { display: none !important; }
+:root a[href^="http://codec.codecm.com/"], :root a[href^="http://us.marketgid.com"], :root a[href*="please-direct.com"], :root a[href*="/cmd.php?ad="], :root a[href^="http://www.bet365.com/"][href*="?affiliate="], :root a[href^="http://deloplen.com/afu.php?zoneid="], :root a[href*=".clkcln.com/"], :root a[href*=".allsports4you.club"], :root a[href^="http://stateresolver.link/"], :root a[href^="http://k2s.cc/pr/"], :root a[href^="https://www.pornhat.com/"][rel="nofollow"], :root topadblock, :root a[href^="http://paid.outbrain.com/network/redir?"], :root a[data-obtrack^="http://paid.outbrain.com/network/redir?"], :root #mn div[style="position:relative"] > #center_col > div > ._dPg, :root a[href$="/vghd.shtml"], :root a[href*="zdravo-med.ru"], :root a[href*="//utimg.ru/"], :root a[href^="http://popup.taboola.com/"], :root a[href^="http://liversely.net/"], :root a[href^="https://relap.io/"][href*="promo_ad_link"], :root div[data-subscript="Advertising"], :root a[data-widget-outbrain-redirect^="http://paid.outbrain.com/network/redir?"], :root a[href^="http://www.epicgameads.com/"], :root a[href^="http://cp.cbbp1.com"], :root #center_col > #taw > #tvcap > .cu-container > .commercial-unit-desktop-top, :root a[href^="https://meet-to-fuck.com/tds"], :root a[data-redirect^="http://click.plista.com/pets"], :root [onclick^="window.open('https://www.brazzersnetwork.com/landing/"], :root #center_col > #resultStats + div[style="border:1px solid #dedede;margin-bottom:11px;padding:5px 7px 5px 6px"], :root a[href*=".intab.fun/"], :root #ads > .dose > .dosesingle, :root div[class^="index_displayAd_"], :root a[href^="http://www.1clickdownloader.com/"], :root a[href*="sapmedia.ru"], :root [onclick^="window.open('http://adultfriendfinder.com/search/"], :root a[href^="http://www.sexgangsters.com/?pid="], :root a[href^="http://click.hotlog.ru/"], :root [lazy-ad="leftbottom_banner"], :root [href^="https://get-download.club/"], :root a[href^="http://data.committeemenencyclopedicrepertory.info/"], :root [href^="http://www.xiloy.site/"], :root a[href*="//newbrowser.me/"], :root a[href^="http://www.idownloadplay.com/"], :root .__ywl .__y_item, :root a[href*="deliver.trafficfabrik.com"], :root AMP-AD, :root [onclick*="mixadvert.com"], :root a[href^="//healthaffiliate.center/"], :root #mbEnd[cellspacing="0"][cellpadding="0"], :root div[id^="ad-server-"], :root a[href^="http://www.mysuperpharm.com/"], :root a[href*="://parandaya.com"], :root .GHOFUQ5BG2 > .GHOFUQ5BF2 > .GHOFUQ5BG5, :root a[href^="https://djtcollectorclub.org/"][href*="?affiliate_id="], :root a[href^="https://chaturbate.com/in/?tour="], :root .GFYY1SVE2 > .GFYY1SVD2 > .GFYY1SVG5, :root a[href*=".trust.zone"], :root a[href*="tptrk.ru"], :root .trc_related_container div[data-item-syndicated="true"], :root [id*="MarketGid"], :root a[href^="http://ads.expekt.com/affiliates/"], :root a[href^="http://www.liversely.net/"], :root a[href^="http://websitedhoome.com/"], :root a[href^="https://land.brazzersnetwork.com/landing/"], :root a[href^="http://hitcounter.ru/top/stat.php"], :root div[id^="yandex_rtb"], :root a[href^="http://mmo123.co/"], :root a[href^="http://www.TwinPlan.com/AF_"], :root .plistaList > .itemLinkPET, :root .rc-cta[data-target], :root [href^="https://maskip.co/"], :root a[href^="http://xads.zedo.com/"], :root a[href*="goodtrack.ru"], :root div[id^="advads-"], :root .GJJKPX2N1 > .GJJKPX2M1 > .GJJKPX2P4, :root a[data-redirect^="http://paid.outbrain.com/network/redir?"], :root a[href^="https://fileboom.me/pr/"], :root #center_col > #\5f Emc, :root a[href*="offhealth.ru"], :root a[href*="muz-loader.site"], :root [href*="//xml.revrtb.com/"], :root #center_col > #res > #topstuff + #search > div > #ires > #rso > #flun, :root div[class^="adpubs-"], :root a[href*="ad2upapp.com/"], :root .icons-rss-feed + .icons-rss-feed div[class$="_item"], :root a[href^="https://gamescarousel.com/"], :root .ra[align="left"][width="30%"], :root div[class*="relap"][class*="-rec-item"], :root a[href^="http://9amq5z4y1y.com/"], :root a[href^="https://secure.eveonline.com/ft/?aid="], :root a[href^="http://www.bluehost.com/track/"] > img, :root div[id^="div_ad_stack_"], :root a[href^="https://adswick.com/"], :root a[href^="http://allaptair.club/"], :root a[data-nvp*="'trafficUrl':'https://paid.outbrain.com/network/redir?"], :root .mod > .gws-local-promotions__border, :root a[href^="http://www.mrskin.com/tour"], :root #topstuff > #tads, :root img[width="120"][height="600"], :root .jobs-information-call-to-action + .jobs-information-call-to-action div[class$="_item"], :root a[href*="/mosday.ru/ad/"], :root #resultspanel > #topads, :root ad-slot--header-banner, :root a[href^="http://www.myfreepaysite.com/sfw.php?aid"], :root a[href*="//bongacams5.com/track?"], :root a#mobtop[title="Рейтинг мобильных сайтов"], :root td[valign="top"] > .mainmenu[style="padding:10px 0 0 0 !important;"], :root a[href^="https://t.hrtyj.com/"], :root a[href^="//go.vedohd.org/"], :root [href*="pigiuqproxy.com"], :root a[onmousedown^="this.href='http://staffpicks.outbrain.com/network/redir?"][target="_blank"], :root a[href^="https://dynamicadx.com/"], :root a[href*="linkmyc.com"], :root a[href^="http://clicks.binarypromos.com/"], :root div[id^="join_informer_"], :root a[href*="//fofuvipibo.com/"], :root .trc_rbox_div a[target="_blank"][href^="http://tab"], :root div[class^="pane-google-admanager-"], :root a[href^="http://adultfriendfinder.com/p/register.cgi?pid="], :root a[href*=".revimedia.com/"], :root #ssmiwdiv[jsdisplay], :root .lads[width="100%"][style="background:#FFF8DD"], :root a[href^="http://360ads.go2cloud.org/"], :root a[href^="http://z1.zedo.com/"], :root a[data-redirect^="https://paid.outbrain.com/network/redir?"], :root div[id^="dfp-slot-"], :root a[data-oburl^="https://paid.outbrain.com/network/redir?"], :root .__y_elastic .__y_item, :root div[class^="index_adAfterContent_"], :root a[href^="//medleyads.com/spot/"], :root #tads + div + .c, :root div[id^="rtn4p"], :root a[href^="http://www.installads.net/"], :root .GKJYXHBF2 > .GKJYXHBE2 > .GKJYXHBH5, :root div[class^="Ad__container"], :root #mn #center_col > div > h2.spon:first-child + ol:last-child, :root a[href^="https://iac.ampxdirect.com/"], :root a[href^="https://www.share-online.biz/affiliate/"], :root .content__right > .z-market_right_yes, :root a[href*=".adsrv.eacdn.com/"] > img, :root div[data-mediatype="advertising"], :root a[href*="ultrabit.ws"], :root a[href^="https://track.themadtrcker.com/"], :root a[href*=".bang.com/"][href*="&aff="], :root a[href^="https://control.trafficfabrik.com/"], :root a[href^="https://traffic.bannerator.com/"], :root a[href^="https://track.adform.net/"], :root #mn div[style="position:relative"] > #center_col > ._Ak, :root a[href^="https://clixtrac.com/"], :root div[id*="Teaser_Block"], :root a[href^="http://campeeks.com/"][href*="&utm_"], :root a[href*="//refpaewsbc.top/"], :root a[href^="http://www.affbuzzads.com/affiliate/"], :root .section-result[data-result-ad-type], :root a[href*="idealmedia.io"], :root .l-container > #fishtank, :root a[href*="torrentum.ru"], :root #flowplayer > div[style="z-index: 208; position: absolute; width: 300px; height: 275px; left: 222.5px; top: 85px;"], :root a[href^="http://www.twinplan.com/AF_"], :root a[href^="http://getlinksinaseconds.com/"], :root a[href^="http://espn.zlbu.net/"], :root a[href*="//promo-bc.com/track?"], :root iframe[src*="marketgid.com"], :root a[href*="kma1.biz"], :root p[id^="div-gpt-ad-"], :root #\5f _mom_ad_2, :root a[href^="https://horny-pussies.com/tds"], :root a[href^="https://americafirstpolls.com/"], :root a[href^="http://findersocket.com/"], :root a[href^="http://www.afco2go.com/srv.php?"], :root a[href*="/servlet/click/zone?"], :root a[href^="https://track.totalav.com/"], :root [lazy-ad="top_banner"], :root a[href^="https://www.nutaku.net/signup/landing/"], :root .__y_inner > .__y_item, :root a[href^="http://istri.it/?"], :root a[href*="/u-loads.ru/"], :root #main-content > [style="padding:10px 0 0 0 !important;"], :root a[href^="https://homyanus.com"], :root a[href^="http://www.dl-provider.com/search/"], :root div[id^="criteo-"][style], :root #atvcap + #tvcap > .mnr-c > .commercial-unit-mobile-top, :root a[href*="=adscript"], :root a[href*="lifebloggersz.ru"], :root a[href^="https://adnetwrk.com/"], :root #main_col > #center_col div[style="font-size:14px;margin:0 4px;padding:1px 5px;background:#fff7ed"], :root [lazy-ad="lefttop_banner"], :root a[href^="https://www.g4mz.com/"], :root a[href*="bubblesmedia.ru/sb/clk/"], :root a[href^="http://intent.bingads.com/"], :root .__ywvr .__y_item, :root LEADERBOARD-AD, :root #header + #content > #left > #rlblock_left, :root [id*="ScriptRoot"], :root a[href^="http://g1.v.fwmrm.net/ad/"], :root #center_col > #taw > #tvcap > .commercial-unit-desktop-top, :root a[href*="5iclx7wa4q.com"], :root a[href^=" http://ads.ad-center.com/"], :root #rhs_block .mod > .luhb-div > div[data-async-type="updateHotelBookingModule"], :root a[href*="//loderls.ru"], :root #center_col > #resultStats + div + #res + #tads, :root a[href*="://segodnia.club/"], :root a[href^="http://record.commissionking.com/"], :root a[href^="http://www.mobileandinternetadvertising.com/"], :root .trc_rbox_div .syndicatedItemUB, :root a[href^="http://ucam.xxx/?utm_"], :root #taw > .med + div > #tvcap > .mnr-c:not(.qs-ic) > .commercial-unit-mobile-top, :root a[href^="https://trackjs.com/?utm_source"], :root a[href^="http://t.mdn2015x1.com/"], :root #center_col > #resultStats + #tads + #res + #tads, :root #\5f _admvnlb_modal_container, :root a[href*="medicalblogs.ru"], :root [href*="/uni-tds.com/"], :root a[href^="http://connectlinking6.com/"], :root #\5f _nq__hh[style="display:block!important"], :root .plista_widget_belowArticleRelaunch_item[data-type="pet"] { display: none !important; }</style></head>
+
+
+<!--
+<script type="text/javascript" src="http://robocraft.ru/classes/lib/external/JsHttpRequest/JsHttpRequest.js"></script>
+
+<script type="text/javascript" src="http://robocraft.ru/classes/lib/external/prettify/prettify.js"></script>
+
+
+<script type="text/javascript">
+var tinyMCE=false;
+</script>
+
+
+
+
+<body onload="prettyPrint()">
+-->
+<body>
+
+<div id="debug" style="border: 2px #dd0000 solid; display: none;"></div>
+
+<div id="container">
+	
+		<!-- Header -->
+		
+	<div style="display: none;">
+	<div class="login-popup" id="login-form">
+		<div class="login-popup-top"><a href="http://robocraft.ru/blog/algorithm/560.html#" class="close-block" onclick="return false;"></a></div>
+		<div class="content">
+			<form action="http://robocraft.ru/login/" method="post">
+				<h3>Авторизация</h3>
+				<div class="lite-note"><a href="http://robocraft.ru/registration/">Зарегистрироваться</a><label for="login-input">Логин или эл. почта</label></div>
+				<p><input type="text" class="input-text" name="login" tabindex="1" id="login-input"></p>
+				<div class="lite-note"><a href="http://robocraft.ru/login/reminder/" tabindex="-1">Напомнить пароль</a><label>Пароль</label></div>
+				<p><input type="password" name="password" class="input-text" tabindex="2"></p>
+				<div class="lite-note"><button type="submit" onfocus="blur()"><span><em>Войти</em></span></button><label class="input-checkbox"><input type="checkbox" name="remember" checked="" tabindex="3">Запомнить меня</label></div>
+				<input type="hidden" name="submit_login">
+			</form>
+		</div>
+		<div class="login-popup-bottom"></div>
+	</div>
+	</div>
+		
+	<div id="header">
+		<h1 style="padding: 0;">
+		<a href="http://robocraft.ru/"><img src="http://robocraft.ru/logo_robocraft_80.png" alt="RoboCraft" title="RoboCraft"></a>
+		<!-- <a href="http://robocraft.ru" style="background: url(http://robocraft.ru/rc80-ny.png) no-repeat scroll 0 -1px transparent; padding-left:80px; padding-top:25px; height:80px; display:block;"><strong>Robo</strong>Craft</a> -->
+		</h1>
+		
+		<ul class="nav-main">
+			<li class="active"><a href="http://robocraft.ru/blog/" style="text-decoration:none;">Блоги</a></li>
+			<!-- <li ><a href="http://robocraft.ru/people/">Люди</a></li>
+			<li ><a href="http://robocraft.ru/page/about/">О проекте</a></li> -->
+			<li><a href="http://robocraft.ru/page/summary/" style="text-decoration:none; color:white;">Статьи</a></li>
+			<li><a href="http://robocraft.ru/shop/" style="text-decoration:none; color:orange;" title="Наш Магазин">Магазин</a></li>
+			<li>
+				<a href="http://robocraft.ru/forum/" style="text-decoration:none;">Форум</a>
+			</li>
+			<!-- <li><a href="http://robocraft.ru/development/" style="text-decoration:none; color: rgb(119, 209, 21);" title="Заказать разработку">Разработка</a></li>
+			 <li>
+				<a style="text-decoration:none; color: rgb(119, 209, 21);" href="http://robocraft.ru/blog/RoboCraft/3623.html">КиберВесна</a>
+			</li> -->
+		</ul>
+		
+				<div class="profile guest">
+			<a href="http://robocraft.ru/login/" onclick="return showLoginForm();">Войти</a> или 
+			<a href="http://robocraft.ru/registration/" class="reg">Зарегистрироваться</a>
+		</div>
+				
+	</div>
+	<!-- /Header -->	
+	
+	﻿	<!-- Navigation -->
+	<div id="nav">
+		<div class="left"></div>
+				
+							<ul class="menu">
+		
+			<li>
+				<a href="http://robocraft.ru/">Все</a> 							</li>
+			
+			<li class="active">
+				<a href="http://robocraft.ru/blog/">Тематические</a> 									<ul class="sub-menu">											
+						<li><div><a href="http://robocraft.ru/blog/">Хорошие</a></div></li>
+												<li><div><a href="http://robocraft.ru/blog/bad/">Плохие</a></div></li>
+					</ul>
+							</li>
+			
+			<li>
+				<a href="http://robocraft.ru/log/">Персональные</a> 							</li>
+			
+			<li>
+				<a href="http://robocraft.ru/top/">TOP</a>
+							</li>
+								
+		</ul>
+		
+		
+		
+			
+				
+		<div class="right"></div>
+		<!--<a href="#" class="rss" onclick="return false;"></a>-->
+		<div class="search">
+				 <form method="get" action="http://robocraft.ru/search/">
+                        <input class="text" type="text" id="srch" maxlength="32" name="searchfor" value="Поиск" onclick="if (value==&#39;Поиск&#39;) value=&#39;&#39;" onkeyup="fast_search();" onblur="close_fast_search();" onfocus="this.select();" autocomplete="off">
+                        <input class="button" type="submit" value="">
+			</form>
+		</div>
+	</div>
+	<!-- /Navigation -->
+		
+	<!--
+	<div id="extra">
+		<a href="#">К списку постов</a>
+	</div>
+	-->
+	
+	<div id="wrapper" class="update-hide ">
+		
+	
+		<!-- Content -->
+		<div id="content">
+		
+					
+								<!-- Topic -->			
+			<div class="topic">
+				<div class="favorite fav-guest"><a href="http://robocraft.ru/blog/algorithm/560.html#" onclick="lsFavourite.toggle(560,this,&#39;topic&#39;); return false;"></a></div>
+				<h1 class="title">
+										Нейронная сеть - обучение ИНС с помощью алгоритма обратного распространения
+									</h1>
+				<ul class="action">					
+					<li><a href="http://robocraft.ru/blog/algorithm/">Программирование</a>&nbsp;&nbsp;</li>						
+														</ul>				
+				<div class="content">
+				
+							
+				
+				
+					<a href="http://robocraft.ru/blog/algorithm/558.html">Нейронная сеть — введение</a><br>
+<b>Принцип обучения многослойной нейронной сети с помощью алгоритма обратного распространения</b><br>
+<br>
+Рассмотрим процесс обучения нейронной сети с использованием алгоритма обратного распространения ошибки (<b>backpropagation</b>).<br>
+<br>
+Для иллюстрации этого процесса используем нейронную сеть состоящую из трёх слоёв и имеющую два входа и один выход:<br>
+<blockquote>здесь, автор считает слои по-другому и не учитывает «2 нейрона» входного слоя</blockquote><br>
+<img src="http://robocraft.ru/files/neuronet/backpropagation/img01.gif" alt="ИНС" title="ИНС"><br>
+Каждый нейрон состоит из двух элементов.<br>
+Первый элемент – дендриты — добавляют весовые коэффициенты ко входным сигналам. <br>
+Второй элемент – тело — реализует нелинейную функцию, т.н. функцию активации нейрона. <br>
+Сигнал <b>е</b> – это взвешенная сумма входных сигналов<br>
+<pre class="prettyprint"><code>у = f (е)</code></pre> — выходной сигнал нейрона. <br>
+<img src="http://robocraft.ru/files/neuronet/backpropagation/img01b.gif"><br>
+<br>
+Чтобы обучить нейронную сеть мы должны подготовить обучающие данные(примеры). <br>
+В нашем случае, тренировочные данные состоят из входных сигналов (х1 и х2) и желаемого результата z. <br>
+Обучение – это последовательность итераций (повторений).<br>
+В каждой итерации весовые коэффициенты нейронов подгоняются с использованием новых данных из тренировочных примеров. <br>
+Изменение весовых коэффициентов и составляют суть алгоритма, описанного ниже.<br>
+<br>
+Каждый шаг обучения начинается с воздействия входных сигналов из тренировочных примеров. После этого мы можем определить значения выходных сигналов для всех нейронов в каждом слое сети. <br>
+Иллюстрации ниже показывают, как сигнал распространяется по сети. <br>
+Символы <b>W(Xm)n</b> представляют вес связи между сетевым входом <b>Xm</b> и нейрона <b>n</b> во входном слое. <br>
+Символы <b>y(n)</b> представляют выходной сигнал нейрона <b>n</b>.<br>
+<img src="http://robocraft.ru/files/neuronet/backpropagation/img02.gif"><br>
+<img src="http://robocraft.ru/files/neuronet/backpropagation/img03.gif"><br>
+<img src="http://robocraft.ru/files/neuronet/backpropagation/img04.gif"><br>
+<br>
+Распространение сигнала через скрытый слой. <br>
+Символы <b>Wmn</b> представляют весовые множители связей между выходом нейрона <b>m</b> и входом нейрона <b>n</b> в следующем слое.<br>
+<img src="http://robocraft.ru/files/neuronet/backpropagation/img05.gif"><br>
+<img src="http://robocraft.ru/files/neuronet/backpropagation/img06.gif"><br>
+Распространение сигнала через выходной слой<br>
+<img src="http://robocraft.ru/files/neuronet/backpropagation/img07.gif"><br>
+На следующем шаге алгоритма, выходной сигнала сети <b>y</b> сравнивается с желаемым выходным сигналом <b>z</b>, который хранится в тренировочных данных. <br>
+Разница между этими двумя сигналами называется ошибкой <b>d</b> выходного слоя сети.<br>
+<img src="http://robocraft.ru/files/neuronet/backpropagation/img08.gif"><br>
+<br>
+Невозможно непосредственно вычислить сигнал ошибки для внутренних нейронов, потому что выходные значения этих нейронов, неизвестны. <br>
+На протяжении многих лет был неизвестен эффективный метод для обучения многослойной сети. <br>
+Только в середине восьмидесятых годов был разработан алгоритм обратного распространения ошибки. <br>
+Идея заключается в распространении сигнала ошибки d (вычисленного в шаге обучения) обратно на все нейроны, чьи выходные сигналы были входящими для последнего нейрона.<br>
+<img src="http://robocraft.ru/files/neuronet/backpropagation/img09.gif"><br>
+<img src="http://robocraft.ru/files/neuronet/backpropagation/img10.gif"><br>
+Весовые коэффициенты <b>Wmn</b>, используемые для обратного распространения ошибки, равны тем же коэффициентам, что использовались во время вычисления выходного сигнала. Только изменяется направление потока данных (сигналы передаются от выхода ко входу). <br>
+Этот процесс повторяется для всех слоёв сети. Если ошибка пришла от нескольких нейронов — она суммируются:<br>
+<img src="http://robocraft.ru/files/neuronet/backpropagation/img11.gif"><br>
+<img src="http://robocraft.ru/files/neuronet/backpropagation/img12.gif"><br>
+<img src="http://robocraft.ru/files/neuronet/backpropagation/img13.gif"><br>
+Когда вычисляется величина ошибки сигнала для каждого нейрона – можно скорректировать весовые коэффициенты каждого узла ввода(дендрита) нейрона.<br>
+В формулах ниже df(e)/de — является производной от функции активации нейрона (чьи весовые коэффициенты корректируются).<br>
+<blockquote>как <a href="http://robocraft.ru/blog/algorithm/558.html">помним</a>, для активационной функции типа сигмоид <br>
+<pre class="prettyprint"><code>
+           1
+S(x) = -----------
+       1 + exp(-x)</code></pre> производная выражается через саму функцию: <pre class="prettyprint"><code>S'(x) = S(x)*(1 - S(x))</code></pre>, что позволяет существенно сократить вычислительную сложность метода обратного распространения ошибки.<br>
+<br>
+Вычисление производной необходимо, потому что для корректировки весовых коэффициентов при обучении ИНС с помощью алгоритма обратного распространения, используется метод <b><a href="https://ru.wikipedia.org/wiki/%C3%F0%E0%E4%E8%E5%ED%F2%ED%FB%E9_%F1%EF%F3%F1%EA">градиентного спуска</a></b>.<br>
+</blockquote><br>
+<img src="http://robocraft.ru/files/neuronet/backpropagation/img14.gif"><br>
+<img src="http://robocraft.ru/files/neuronet/backpropagation/img15.gif"><br>
+<img src="http://robocraft.ru/files/neuronet/backpropagation/img16.gif"><br>
+<img src="http://robocraft.ru/files/neuronet/backpropagation/img17.gif"><br>
+<img src="http://robocraft.ru/files/neuronet/backpropagation/img18.gif"><br>
+<img src="http://robocraft.ru/files/neuronet/backpropagation/img19.gif"><br>
+<br>
+Коэффициент <b>h</b> влияет на скорость обучения сети. <br>
+Есть несколько методов для выбора этого параметра. <br>
+Первый способ — начать учебный процесс с большим значением параметра h. Во время коррекции весовых коэффициентов, параметр постепенно уменьшают. <br>
+Второй — более сложный метод обучения, начинается с малым значением параметра h. В процессе обучения параметр увеличивается, а затем вновь уменьшается на завершающей стадии обучения.<br>
+Начало учебного процесса с низким значением параметра h позволяет определить знак весовых коэффициентов.<br>
+<br>
+<i>продолжение следует...</i><br>
+<br>
+<b>Ссылки</b><br>
+<a href="http://galaxy.agh.edu.pl/~vlsi/AI/backp_t_en/backprop.html">Оригинал статьи (на английском)</a><br>
+<a href="http://ru.wikipedia.org/wiki/%D0%9C%D0%B5%D1%82%D0%BE%D0%B4_%D0%BE%D0%B1%D1%80%D0%B0%D1%82%D0%BD%D0%BE%D0%B3%D0%BE_%D1%80%D0%B0%D1%81%D0%BF%D1%80%D0%BE%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D1%8F_%D0%BE%D1%88%D0%B8%D0%B1%D0%BA%D0%B8">http://ru.wikipedia.org/wiki/Метод_обратного_распространения_ошибки</a><br>
+<a href="http://en.wikipedia.org/wiki/Backpropagation">en.wikipedia.org/wiki/Backpropagation</a><br>
+<a href="http://habrahabr.ru/post/271563/">Нейросеть в 11 строчек на Python</a><br>
+<a href="http://ruder.io/optimizing-gradient-descent/index.html">An overview of gradient descent optimization algorithms</a><br>
+<br>
+<b>По теме</b><br>
+<a href="http://robocraft.ru/blog/algorithm/558.html">Нейронная сеть — введение</a><br>
+<a href="http://robocraft.ru/blog/algorithm/578.html">Пример работы самоорганизующейся инкрементной нейронной сети SOINN</a>
+				</div>				
+				<ul class="tags">
+											<li><a href="http://robocraft.ru/tag/%D0%BA%D0%B8%D0%B1%D0%B5%D1%80%D0%B1%D0%B8%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D1%8F/">кибербиология</a>, </li>
+											<li><a href="http://robocraft.ru/tag/%D0%BD%D0%B5%D0%B9%D1%80%D0%BE%D0%BD%D0%BD%D0%B0%D1%8F%20%D1%81%D0%B5%D1%82%D1%8C/">нейронная сеть</a>, </li>
+											<li><a href="http://robocraft.ru/tag/%D0%BE%D0%B1%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5/">обучение</a>, </li>
+											<li><a href="http://robocraft.ru/tag/backpropagation/">backpropagation</a>, </li>
+											<li><a href="http://robocraft.ru/tag/%D0%BE%D0%B1%D1%80%D0%B0%D1%82%D0%BD%D0%BE%D0%B5%20%D1%80%D0%B0%D1%81%D0%BF%D1%80%D0%BE%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B5%D0%BD%D0%B8%D0%B5/">обратное распространение</a>, </li>
+											<li><a href="http://robocraft.ru/tag/%D0%BE%D1%88%D0%B8%D0%B1%D0%BA%D0%B0/">ошибка</a>, </li>
+											<li><a href="http://robocraft.ru/tag/%D0%BC%D0%B0%D1%88%D0%B8%D0%BD%D0%BD%D0%BE%D0%B5%20%D0%BE%D0%B1%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5/">машинное обучение</a></li>
+														
+				</ul>				
+				<ul class="voting positive guest ">
+					<li class="plus"><a href="http://robocraft.ru/blog/algorithm/560.html#" onclick="lsVote.vote(560,this,1,&#39;topic&#39;); return false;"></a></li>
+					<li class="total" title="всего проголосовало: 3"> +3 </li>
+					<li class="minus"><a href="http://robocraft.ru/blog/algorithm/560.html#" onclick="lsVote.vote(560,this,-1,&#39;topic&#39;); return false;"></a></li>
+					<li class="date">7 июля 2011, 08:01</li>
+										<li class="author"><a href="http://robocraft.ru/profile/noonv/">noonv</a></li>					
+				</ul>
+
+<!-- Yandex.RTB R-A-61645-3 -->
+<div id="yandex_rtb_R-A-61645-3"></div>
+<script type="text/javascript">
+    (function(w, d, n, s, t) {
+        w[n] = w[n] || [];
+        w[n].push(function() {
+            Ya.Context.AdvManager.render({
+                blockId: "R-A-61645-3",
+                renderTo: "yandex_rtb_R-A-61645-3",
+                async: true
+            });
+        });
+        t = d.getElementsByTagName("script")[0];
+        s = d.createElement("script");
+        s.type = "text/javascript";
+        s.src = "//an.yandex.ru/system/context.js";
+        s.async = true;
+        t.parentNode.insertBefore(s, t);
+    })(this, this.document, "yandexContextAsyncCallbacks");
+</script>
+
+			</div>
+			<!-- /Topic -->			
+			
+			<!-- 
+<script type="text/javascript" src="http://robocraft.ru/classes/lib/external/MooTools_1.2/mootools-1.2.js?v=1.2.2"></script>
+<script type="text/javascript" src="http://robocraft.ru/classes/lib/external/MooTools_1.2/plugs/Roal/Roar.js"></script>
+
+<script type="text/javascript">
+var msgErrorBox=new Roar({
+			position: 'upperRight',
+			className: 'roar-error',
+			margin: {x: 30, y: 10}
+		});	
+var msgNoticeBox=new Roar({
+			position: 'upperRight',
+			className: 'roar-notice',
+			margin: {x: 30, y: 10}
+		});	
+</script>
+
+
+<script type="text/javascript" src="http://robocraft.ru/templates/skin/new/js/comments.js"></script>
+-->
+			<!-- Comments -->
+			<div class="comments">
+								
+				<!-- Comments Header -->
+				<div class="header">
+					<h3>Комментарии (<span id="count-comments">19</span>)</h3>
+					<a name="comments"></a>
+					<a href="http://robocraft.ru/rss/comments/560/" class="rss">RSS</a>
+					<a href="http://robocraft.ru/blog/algorithm/560.html#" onclick="lsCmtTree.collapseNodeAll(); return false;" onfocus="blur();">свернуть</a> /
+					<a href="http://robocraft.ru/blog/algorithm/560.html#" onclick="lsCmtTree.expandNodeAll(); return false;" onfocus="blur();">развернуть</a>
+				</div>
+				<!-- /Comments Header -->			
+				
+				<!-- 
+				<script language="JavaScript" type="text/javascript">
+					window.addEvent('domready', function() {
+						
+						lsCmtTree.setIdCommentLast(5663);
+						
+					});					
+				</script>
+				 -->
+				
+																		
+					   					        
+    				    
+    				<div class="comment" id="comment_id_1472">
+    												<img src="http://robocraft.ru/templates/skin/new/images/close.gif" alt="+" title="свернуть/развернуть" class="folding">
+							<a name="comment1472"></a>							
+							<div class="voting positive guest     ">
+								<div class="total">+1</div>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="plus" onclick="lsVote.vote(1472,this,1,&#39;topic_comment&#39;); return false;"></a>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="minus" onclick="lsVote.vote(1472,this,-1,&#39;topic_comment&#39;); return false;"></a>
+							</div>						
+							<div id="comment_content_id_1472" class="content ">								
+															
+								<div class="tb"><div class="tl"><div class="tr"></div></div></div>								
+								<div class="text">
+										
+					    				Спасибо. Наглядно, в той книжке, по которой я изучал, было слишком скучно и без картинок. )))
+																	
+								</div>				
+								<div class="bl"><div class="bb"><div class="br"></div></div></div>
+							</div>							
+							<div class="info">
+								<a href="http://robocraft.ru/profile/DiverOfSky/"><img src="http://robocraft.ru/uploads/images/444/avatar_24x24.jpg" alt="avatar" class="avatar"></a>
+								<p><a href="http://robocraft.ru/profile/DiverOfSky/" class="author">DiverOfSky</a></p>
+								<ul>
+									<li class="date">7 июля 2011, 11:01</li>
+																		
+									<li><a href="http://robocraft.ru/blog/algorithm/560.html#comment1472" class="imglink link"></a></li>	
+																		<li class="goto-comment-child hidden"><a href="http://robocraft.ru/blog/algorithm/560.html#" onclick="return lsCmtTree.goToChildComment(this);" title="Обратно к ответу">↓</a></li>
+									   																	
+								</ul>
+							</div>		
+							<div class="comment"><div class="content"><div class="text" id="comment_preview_1472" style="display: none;"></div></div></div>					
+							<div class="reply" id="reply_1472" style="display: none;"></div>	
+								
+							<div class="comment-children" id="comment-children-1472">    
+    				    
+    																		
+					   					        				</div></div>
+    				    
+    				<div class="comment" id="comment_id_1499">
+    												<img src="http://robocraft.ru/templates/skin/new/images/close.gif" alt="+" title="свернуть/развернуть" class="folding">
+							<a name="comment1499"></a>							
+							<div class="voting  guest     ">
+								<div class="total">0</div>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="plus" onclick="lsVote.vote(1499,this,1,&#39;topic_comment&#39;); return false;"></a>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="minus" onclick="lsVote.vote(1499,this,-1,&#39;topic_comment&#39;); return false;"></a>
+							</div>						
+							<div id="comment_content_id_1499" class="content ">								
+															
+								<div class="tb"><div class="tl"><div class="tr"></div></div></div>								
+								<div class="text">
+										
+					    				Ждем продолжение!
+																	
+								</div>				
+								<div class="bl"><div class="bb"><div class="br"></div></div></div>
+							</div>							
+							<div class="info">
+								<a href="http://robocraft.ru/profile/xalyavius/"><img src="http://robocraft.ru/templates/skin/new/images/avatar_24x24.jpg" alt="avatar" class="avatar"></a>
+								<p><a href="http://robocraft.ru/profile/xalyavius/" class="author">xalyavius</a></p>
+								<ul>
+									<li class="date">19 июля 2011, 12:12</li>
+																		
+									<li><a href="http://robocraft.ru/blog/algorithm/560.html#comment1499" class="imglink link"></a></li>	
+																		<li class="goto-comment-child hidden"><a href="http://robocraft.ru/blog/algorithm/560.html#" onclick="return lsCmtTree.goToChildComment(this);" title="Обратно к ответу">↓</a></li>
+									   																	
+								</ul>
+							</div>		
+							<div class="comment"><div class="content"><div class="text" id="comment_preview_1499" style="display: none;"></div></div></div>					
+							<div class="reply" id="reply_1499" style="display: none;"></div>	
+								
+							<div class="comment-children" id="comment-children-1499">    
+    				    
+    																		
+					   					        				</div></div>
+    				    
+    				<div class="comment" id="comment_id_1530">
+    												<img src="http://robocraft.ru/templates/skin/new/images/close.gif" alt="+" title="свернуть/развернуть" class="folding">
+							<a name="comment1530"></a>							
+							<div class="voting  guest     ">
+								<div class="total">0</div>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="plus" onclick="lsVote.vote(1530,this,1,&#39;topic_comment&#39;); return false;"></a>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="minus" onclick="lsVote.vote(1530,this,-1,&#39;topic_comment&#39;); return false;"></a>
+							</div>						
+							<div id="comment_content_id_1530" class="content ">								
+															
+								<div class="tb"><div class="tl"><div class="tr"></div></div></div>								
+								<div class="text">
+										
+					    				СПАСИБО!!! Это мега круто! Пятнадцать минут у монитора заменили семестр целой дисциплины у скучного и серьёзного препода )))<br>
+Присоединяюсь к остальным — Ждем продолжение! 
+																	
+								</div>				
+								<div class="bl"><div class="bb"><div class="br"></div></div></div>
+							</div>							
+							<div class="info">
+								<a href="http://robocraft.ru/profile/SinauRus/"><img src="http://robocraft.ru/uploads/images/382/avatar_24x24.jpg" alt="avatar" class="avatar"></a>
+								<p><a href="http://robocraft.ru/profile/SinauRus/" class="author">SinauRus</a></p>
+								<ul>
+									<li class="date">5 августа 2011, 19:24</li>
+																		
+									<li><a href="http://robocraft.ru/blog/algorithm/560.html#comment1530" class="imglink link"></a></li>	
+																		<li class="goto-comment-child hidden"><a href="http://robocraft.ru/blog/algorithm/560.html#" onclick="return lsCmtTree.goToChildComment(this);" title="Обратно к ответу">↓</a></li>
+									   																	
+								</ul>
+							</div>		
+							<div class="comment"><div class="content"><div class="text" id="comment_preview_1530" style="display: none;"></div></div></div>					
+							<div class="reply" id="reply_1530" style="display: none;"></div>	
+								
+							<div class="comment-children" id="comment-children-1530">    
+    				    
+    																		
+					   					        				</div></div>
+    				    
+    				<div class="comment" id="comment_id_2744">
+    												<img src="http://robocraft.ru/templates/skin/new/images/close.gif" alt="+" title="свернуть/развернуть" class="folding">
+							<a name="comment2744"></a>							
+							<div class="voting  guest     ">
+								<div class="total">0</div>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="plus" onclick="lsVote.vote(2744,this,1,&#39;topic_comment&#39;); return false;"></a>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="minus" onclick="lsVote.vote(2744,this,-1,&#39;topic_comment&#39;); return false;"></a>
+							</div>						
+							<div id="comment_content_id_2744" class="content ">								
+															
+								<div class="tb"><div class="tl"><div class="tr"></div></div></div>								
+								<div class="text">
+										
+					    				<b>здесь, автор считает слои по-другому и не учитывает «2 нейрона» входного слоя</b> автор правильно считает. Входной слой вообще слоем не считается(в многослойных сетях)
+																	
+								</div>				
+								<div class="bl"><div class="bb"><div class="br"></div></div></div>
+							</div>							
+							<div class="info">
+								<a href="http://robocraft.ru/profile/sakkaba/"><img src="http://robocraft.ru/templates/skin/new/images/avatar_24x24.jpg" alt="avatar" class="avatar"></a>
+								<p><a href="http://robocraft.ru/profile/sakkaba/" class="author">sakkaba</a></p>
+								<ul>
+									<li class="date">27 марта 2012, 22:00</li>
+																		
+									<li><a href="http://robocraft.ru/blog/algorithm/560.html#comment2744" class="imglink link"></a></li>	
+																		<li class="goto-comment-child hidden"><a href="http://robocraft.ru/blog/algorithm/560.html#" onclick="return lsCmtTree.goToChildComment(this);" title="Обратно к ответу">↓</a></li>
+									   																	
+								</ul>
+							</div>		
+							<div class="comment"><div class="content"><div class="text" id="comment_preview_2744" style="display: none;"></div></div></div>					
+							<div class="reply" id="reply_2744" style="display: none;"></div>	
+								
+							<div class="comment-children" id="comment-children-2744">    
+    				    
+    																		
+					   					        				</div></div>
+    				    
+    				<div class="comment" id="comment_id_3660">
+    									
+							<span class="delete">комментарий был удален</span><br><br>
+								
+							<div class="comment-children" id="comment-children-3660">    
+    				    
+    																		
+					   					        				</div></div>
+    				    
+    				<div class="comment" id="comment_id_3661">
+    												<img src="http://robocraft.ru/templates/skin/new/images/close.gif" alt="+" title="свернуть/развернуть" class="folding">
+							<a name="comment3661"></a>							
+							<div class="voting  guest     ">
+								<div class="total">0</div>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="plus" onclick="lsVote.vote(3661,this,1,&#39;topic_comment&#39;); return false;"></a>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="minus" onclick="lsVote.vote(3661,this,-1,&#39;topic_comment&#39;); return false;"></a>
+							</div>						
+							<div id="comment_content_id_3661" class="content ">								
+															
+								<div class="tb"><div class="tl"><div class="tr"></div></div></div>								
+								<div class="text">
+										
+					    				Отлично! Огромное спасибо.<br>
+А нельзя ли так же доходчиво рассказать про карты Кохонена? Очень хотелось бы не ломая мозгов понять еще один нейро-алгоритм: т.н. «Расширяющийся нейронный газ».<br>
+Вообще, пора уже издать книжку типа «Нейросети Для Чайников». Я бы купил.
+																	
+								</div>				
+								<div class="bl"><div class="bb"><div class="br"></div></div></div>
+							</div>							
+							<div class="info">
+								<a href="http://robocraft.ru/profile/Fedor/"><img src="http://robocraft.ru/templates/skin/new/images/avatar_24x24.jpg" alt="avatar" class="avatar"></a>
+								<p><a href="http://robocraft.ru/profile/Fedor/" class="author">Fedor</a></p>
+								<ul>
+									<li class="date">23 декабря 2012, 22:19</li>
+																		
+									<li><a href="http://robocraft.ru/blog/algorithm/560.html#comment3661" class="imglink link"></a></li>	
+																		<li class="goto-comment-child hidden"><a href="http://robocraft.ru/blog/algorithm/560.html#" onclick="return lsCmtTree.goToChildComment(this);" title="Обратно к ответу">↓</a></li>
+									   																	
+								</ul>
+							</div>		
+							<div class="comment"><div class="content"><div class="text" id="comment_preview_3661" style="display: none;"></div></div></div>					
+							<div class="reply" id="reply_3661" style="display: none;"></div>	
+								
+							<div class="comment-children" id="comment-children-3661">    
+    				    
+    																		
+					   					        				</div></div>
+    				    
+    				<div class="comment" id="comment_id_5025">
+    												<img src="http://robocraft.ru/templates/skin/new/images/close.gif" alt="+" title="свернуть/развернуть" class="folding">
+							<a name="comment5025"></a>							
+							<div class="voting positive guest     ">
+								<div class="total">+1</div>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="plus" onclick="lsVote.vote(5025,this,1,&#39;topic_comment&#39;); return false;"></a>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="minus" onclick="lsVote.vote(5025,this,-1,&#39;topic_comment&#39;); return false;"></a>
+							</div>						
+							<div id="comment_content_id_5025" class="content ">								
+															
+								<div class="tb"><div class="tl"><div class="tr"></div></div></div>								
+								<div class="text">
+										
+					    				Что-то я не понял, когда считаем новый вес, к старому прибавляем произведение шага, ошибки, а вот с производной что-то не понятное написано :( может кто словами написать что там делается?
+																	
+								</div>				
+								<div class="bl"><div class="bb"><div class="br"></div></div></div>
+							</div>							
+							<div class="info">
+								<a href="http://robocraft.ru/profile/fobes/"><img src="http://robocraft.ru/templates/skin/new/images/avatar_24x24.jpg" alt="avatar" class="avatar"></a>
+								<p><a href="http://robocraft.ru/profile/fobes/" class="author">fobes</a></p>
+								<ul>
+									<li class="date">19 марта 2015, 19:50</li>
+																		
+									<li><a href="http://robocraft.ru/blog/algorithm/560.html#comment5025" class="imglink link"></a></li>	
+																		<li class="goto-comment-child hidden"><a href="http://robocraft.ru/blog/algorithm/560.html#" onclick="return lsCmtTree.goToChildComment(this);" title="Обратно к ответу">↓</a></li>
+									   																	
+								</ul>
+							</div>		
+							<div class="comment"><div class="content"><div class="text" id="comment_preview_5025" style="display: none;"></div></div></div>					
+							<div class="reply" id="reply_5025" style="display: none;"></div>	
+								
+							<div class="comment-children" id="comment-children-5025">    
+    				    
+    																		
+					   					        
+    				    
+    				<div class="comment" id="comment_id_5034">
+    												<img src="http://robocraft.ru/templates/skin/new/images/close.gif" alt="+" title="свернуть/развернуть" class="folding">
+							<a name="comment5034"></a>							
+							<div class="voting  guest     ">
+								<div class="total">0</div>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="plus" onclick="lsVote.vote(5034,this,1,&#39;topic_comment&#39;); return false;"></a>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="minus" onclick="lsVote.vote(5034,this,-1,&#39;topic_comment&#39;); return false;"></a>
+							</div>						
+							<div id="comment_content_id_5034" class="content ">								
+															
+								<div class="tb"><div class="tl"><div class="tr"></div></div></div>								
+								<div class="text">
+										
+					    				Идея обучения ИНС, состоит в нахождении весовых коэффициентов синапсов, за счёт распространения сигналов ошибки от выхода ИНС к её входам.<br>
+Для корректировки весовых коэффициентов, используется метод <noindex><a href="https://ru.wikipedia.org/wiki/%C3%F0%E0%E4%E8%E5%ED%F2%ED%FB%E9_%F1%EF%F3%F1%EA" rel="nofollow">градиентного спуска</a></noindex>, откуда и появляется производная.
+																	
+								</div>				
+								<div class="bl"><div class="bb"><div class="br"></div></div></div>
+							</div>							
+							<div class="info">
+								<a href="http://robocraft.ru/profile/noonv/"><img src="http://robocraft.ru/uploads/images/2/avatar_24x24.jpg" alt="avatar" class="avatar"></a>
+								<p><a href="http://robocraft.ru/profile/noonv/" class="author">noonv</a></p>
+								<ul>
+									<li class="date">23 марта 2015, 10:11</li>
+																		
+									<li><a href="http://robocraft.ru/blog/algorithm/560.html#comment5034" class="imglink link"></a></li>	
+																			<li class="goto-comment-parent"><a href="http://robocraft.ru/blog/algorithm/560.html#comment5025" onclick="return lsCmtTree.goToParentComment($(this));" title="Ответ на">↑</a></li>
+																		<li class="goto-comment-child hidden"><a href="http://robocraft.ru/blog/algorithm/560.html#" onclick="return lsCmtTree.goToChildComment(this);" title="Обратно к ответу">↓</a></li>
+									   																	
+								</ul>
+							</div>		
+							<div class="comment"><div class="content"><div class="text" id="comment_preview_5034" style="display: none;"></div></div></div>					
+							<div class="reply" id="reply_5034" style="display: none;"></div>	
+								
+							<div class="comment-children" id="comment-children-5034">    
+    				    
+    																		
+					   					    	
+        				</div></div></div></div>    				    
+    				<div class="comment" id="comment_id_5107">
+    												<img src="http://robocraft.ru/templates/skin/new/images/close.gif" alt="+" title="свернуть/развернуть" class="folding">
+							<a name="comment5107"></a>							
+							<div class="voting positive guest     ">
+								<div class="total">+1</div>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="plus" onclick="lsVote.vote(5107,this,1,&#39;topic_comment&#39;); return false;"></a>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="minus" onclick="lsVote.vote(5107,this,-1,&#39;topic_comment&#39;); return false;"></a>
+							</div>						
+							<div id="comment_content_id_5107" class="content ">								
+															
+								<div class="tb"><div class="tl"><div class="tr"></div></div></div>								
+								<div class="text">
+										
+					    				Как так выходит на вход подаются определенные значения больше 1, а на результирующем нейроне мы значения прогоняем через сигмоиду и как может выйти что-то больше 1?
+																	
+								</div>				
+								<div class="bl"><div class="bb"><div class="br"></div></div></div>
+							</div>							
+							<div class="info">
+								<a href="http://robocraft.ru/profile/Mefgalm/"><img src="http://robocraft.ru/templates/skin/new/images/avatar_24x24.jpg" alt="avatar" class="avatar"></a>
+								<p><a href="http://robocraft.ru/profile/Mefgalm/" class="author">Mefgalm</a></p>
+								<ul>
+									<li class="date">1 мая 2015, 18:47</li>
+																		
+									<li><a href="http://robocraft.ru/blog/algorithm/560.html#comment5107" class="imglink link"></a></li>	
+																		<li class="goto-comment-child hidden"><a href="http://robocraft.ru/blog/algorithm/560.html#" onclick="return lsCmtTree.goToChildComment(this);" title="Обратно к ответу">↓</a></li>
+									   																	
+								</ul>
+							</div>		
+							<div class="comment"><div class="content"><div class="text" id="comment_preview_5107" style="display: none;"></div></div></div>					
+							<div class="reply" id="reply_5107" style="display: none;"></div>	
+								
+							<div class="comment-children" id="comment-children-5107">    
+    				    
+    																		
+					   					        
+    				    
+    				<div class="comment" id="comment_id_5109">
+    												<img src="http://robocraft.ru/templates/skin/new/images/close.gif" alt="+" title="свернуть/развернуть" class="folding">
+							<a name="comment5109"></a>							
+							<div class="voting  guest     ">
+								<div class="total">0</div>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="plus" onclick="lsVote.vote(5109,this,1,&#39;topic_comment&#39;); return false;"></a>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="minus" onclick="lsVote.vote(5109,this,-1,&#39;topic_comment&#39;); return false;"></a>
+							</div>						
+							<div id="comment_content_id_5109" class="content ">								
+															
+								<div class="tb"><div class="tl"><div class="tr"></div></div></div>								
+								<div class="text">
+										
+					    				Как раз и выходит, что для того чтобы подавать данные на вход ИНС, их предварительно нужно <b>нормировать</b>, чтобы они были представлены числом <b>от 0 до 1</b>.
+																	
+								</div>				
+								<div class="bl"><div class="bb"><div class="br"></div></div></div>
+							</div>							
+							<div class="info">
+								<a href="http://robocraft.ru/profile/noonv/"><img src="http://robocraft.ru/uploads/images/2/avatar_24x24.jpg" alt="avatar" class="avatar"></a>
+								<p><a href="http://robocraft.ru/profile/noonv/" class="author">noonv</a></p>
+								<ul>
+									<li class="date">4 мая 2015, 21:49</li>
+																		
+									<li><a href="http://robocraft.ru/blog/algorithm/560.html#comment5109" class="imglink link"></a></li>	
+																			<li class="goto-comment-parent"><a href="http://robocraft.ru/blog/algorithm/560.html#comment5107" onclick="return lsCmtTree.goToParentComment($(this));" title="Ответ на">↑</a></li>
+																		<li class="goto-comment-child hidden"><a href="http://robocraft.ru/blog/algorithm/560.html#" onclick="return lsCmtTree.goToChildComment(this);" title="Обратно к ответу">↓</a></li>
+									   																	
+								</ul>
+							</div>		
+							<div class="comment"><div class="content"><div class="text" id="comment_preview_5109" style="display: none;"></div></div></div>					
+							<div class="reply" id="reply_5109" style="display: none;"></div>	
+								
+							<div class="comment-children" id="comment-children-5109">    
+    				    
+    																		
+					   					    	
+        				</div></div></div></div>    				    
+    				<div class="comment" id="comment_id_5297">
+    												<img src="http://robocraft.ru/templates/skin/new/images/close.gif" alt="+" title="свернуть/развернуть" class="folding">
+							<a name="comment5297"></a>							
+							<div class="voting  guest     ">
+								<div class="total">0</div>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="plus" onclick="lsVote.vote(5297,this,1,&#39;topic_comment&#39;); return false;"></a>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="minus" onclick="lsVote.vote(5297,this,-1,&#39;topic_comment&#39;); return false;"></a>
+							</div>						
+							<div id="comment_content_id_5297" class="content ">								
+															
+								<div class="tb"><div class="tl"><div class="tr"></div></div></div>								
+								<div class="text">
+										
+					    				Спасибо за читабельную статью! =) Не могу понять, w'=w + h * D * f'(e) *x, правильно ли я написал формулу, если да, то что вставлять вместо E в f'( )?
+																	
+								</div>				
+								<div class="bl"><div class="bb"><div class="br"></div></div></div>
+							</div>							
+							<div class="info">
+								<a href="http://robocraft.ru/profile/kukuklan/"><img src="http://robocraft.ru/templates/skin/new/images/avatar_24x24.jpg" alt="avatar" class="avatar"></a>
+								<p><a href="http://robocraft.ru/profile/kukuklan/" class="author">kukuklan</a></p>
+								<ul>
+									<li class="date">29 октября 2015, 01:26</li>
+																		
+									<li><a href="http://robocraft.ru/blog/algorithm/560.html#comment5297" class="imglink link"></a></li>	
+																		<li class="goto-comment-child hidden"><a href="http://robocraft.ru/blog/algorithm/560.html#" onclick="return lsCmtTree.goToChildComment(this);" title="Обратно к ответу">↓</a></li>
+									   																	
+								</ul>
+							</div>		
+							<div class="comment"><div class="content"><div class="text" id="comment_preview_5297" style="display: none;"></div></div></div>					
+							<div class="reply" id="reply_5297" style="display: none;"></div>	
+								
+							<div class="comment-children" id="comment-children-5297">    
+    				    
+    																		
+					   					        
+    				    
+    				<div class="comment" id="comment_id_5298">
+    												<img src="http://robocraft.ru/templates/skin/new/images/close.gif" alt="+" title="свернуть/развернуть" class="folding">
+							<a name="comment5298"></a>							
+							<div class="voting  guest     ">
+								<div class="total">0</div>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="plus" onclick="lsVote.vote(5298,this,1,&#39;topic_comment&#39;); return false;"></a>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="minus" onclick="lsVote.vote(5298,this,-1,&#39;topic_comment&#39;); return false;"></a>
+							</div>						
+							<div id="comment_content_id_5298" class="content ">								
+															
+								<div class="tb"><div class="tl"><div class="tr"></div></div></div>								
+								<div class="text">
+										
+					    				<blockquote>Сигнал е – это взвешенная сумма входных сигналов</blockquote>
+																	
+								</div>				
+								<div class="bl"><div class="bb"><div class="br"></div></div></div>
+							</div>							
+							<div class="info">
+								<a href="http://robocraft.ru/profile/admin/"><img src="http://robocraft.ru/uploads/images/1/avatar_24x24.png" alt="avatar" class="avatar"></a>
+								<p><a href="http://robocraft.ru/profile/admin/" class="author">admin</a></p>
+								<ul>
+									<li class="date">29 октября 2015, 11:29</li>
+																		
+									<li><a href="http://robocraft.ru/blog/algorithm/560.html#comment5298" class="imglink link"></a></li>	
+																			<li class="goto-comment-parent"><a href="http://robocraft.ru/blog/algorithm/560.html#comment5297" onclick="return lsCmtTree.goToParentComment($(this));" title="Ответ на">↑</a></li>
+																		<li class="goto-comment-child hidden"><a href="http://robocraft.ru/blog/algorithm/560.html#" onclick="return lsCmtTree.goToChildComment(this);" title="Обратно к ответу">↓</a></li>
+									   																	
+								</ul>
+							</div>		
+							<div class="comment"><div class="content"><div class="text" id="comment_preview_5298" style="display: none;"></div></div></div>					
+							<div class="reply" id="reply_5298" style="display: none;"></div>	
+								
+							<div class="comment-children" id="comment-children-5298">    
+    				    
+    																		
+					   					    	
+        				</div></div></div></div>    				    
+    				<div class="comment" id="comment_id_5342">
+    												<img src="http://robocraft.ru/templates/skin/new/images/close.gif" alt="+" title="свернуть/развернуть" class="folding">
+							<a name="comment5342"></a>							
+							<div class="voting  guest     ">
+								<div class="total">0</div>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="plus" onclick="lsVote.vote(5342,this,1,&#39;topic_comment&#39;); return false;"></a>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="minus" onclick="lsVote.vote(5342,this,-1,&#39;topic_comment&#39;); return false;"></a>
+							</div>						
+							<div id="comment_content_id_5342" class="content ">								
+															
+								<div class="tb"><div class="tl"><div class="tr"></div></div></div>								
+								<div class="text">
+										
+					    				Трудно вспоминать школьный курс по физ.мату если с ним не работал около 10 лет… Но все же очень хочу разобраться: Я проанализировал все по-пунктам (может что-то упустил). описан функционал под уже обученную сеть? Как на первом значении для обучения получить вес W, если на примере сети <pre class="prettyprint"><code>3-&gt;4-&gt;2</code></pre> (кол-во нейронов в слое) ми имеем всего лишь <pre class="prettyprint"><code>Xn и Yn</code></pre> <br>
+<br>
+<pre class="prettyprint"><code>hiddenlayer === (f1(e),f2(e),f3(e),f4(e)) </code></pre>4 нейрона.<br>
+Разбираю пока на примере линейной зависимости без порога активации:<br>
+<pre class="prettyprint"><code>(x1=1,x2=1,x3=1) =&gt; _ _ _ _ _ _ _ _ _ _ &lt; outputlayer (y1=0.17,y2=1)&gt;
+(x1=0,x2=1,x3=1) =&gt; &lt; hiddenlayer &gt;  =&gt; &lt; outputlayer (y1=0.07,y2=0.42)&gt;
+(x1=1,x2=0,x3=1) =&gt; _ _ _ _ _ _ _ _ _ _ &lt; outputlayer (y1=0.15,y2=0.85)&gt;
+(x1=1,x2=1,x3=0) =&gt; _ _ _ _ _ _ _ _ _ _ &lt; outputlayer (y1=0.12,y2=0.71)&gt;
+(x1=0,x2=0,x3=0) =&gt; _ _ _ _ _ _ _ _ _ _ &lt; outputlayer (y1=0,y2=0)&gt;</code></pre>
+																	
+								</div>				
+								<div class="bl"><div class="bb"><div class="br"></div></div></div>
+							</div>							
+							<div class="info">
+								<a href="http://robocraft.ru/profile/x_link/"><img src="http://robocraft.ru/templates/skin/new/images/avatar_24x24.jpg" alt="avatar" class="avatar"></a>
+								<p><a href="http://robocraft.ru/profile/x_link/" class="author">x_link</a></p>
+								<ul>
+									<li class="date">8 декабря 2015, 09:26</li>
+																		
+									<li><a href="http://robocraft.ru/blog/algorithm/560.html#comment5342" class="imglink link"></a></li>	
+																		<li class="goto-comment-child hidden"><a href="http://robocraft.ru/blog/algorithm/560.html#" onclick="return lsCmtTree.goToChildComment(this);" title="Обратно к ответу">↓</a></li>
+									   																	
+								</ul>
+							</div>		
+							<div class="comment"><div class="content"><div class="text" id="comment_preview_5342" style="display: none;"></div></div></div>					
+							<div class="reply" id="reply_5342" style="display: none;"></div>	
+								
+							<div class="comment-children" id="comment-children-5342">    
+    				    
+    																		
+					   					        				</div></div>
+    				    
+    				<div class="comment" id="comment_id_5379">
+    												<img src="http://robocraft.ru/templates/skin/new/images/close.gif" alt="+" title="свернуть/развернуть" class="folding">
+							<a name="comment5379"></a>							
+							<div class="voting  guest     ">
+								<div class="total">0</div>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="plus" onclick="lsVote.vote(5379,this,1,&#39;topic_comment&#39;); return false;"></a>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="minus" onclick="lsVote.vote(5379,this,-1,&#39;topic_comment&#39;); return false;"></a>
+							</div>						
+							<div id="comment_content_id_5379" class="content ">								
+															
+								<div class="tb"><div class="tl"><div class="tr"></div></div></div>								
+								<div class="text">
+										
+					    				Всё конечно очень здорово, но есть одно «НО». При расчёте делта её нужно умножать на производную от функции активации, в связи с чем дельта4, дельта5 и т.д. будут рассчитаны неверно.
+																	
+								</div>				
+								<div class="bl"><div class="bb"><div class="br"></div></div></div>
+							</div>							
+							<div class="info">
+								<a href="http://robocraft.ru/profile/TuMePJlaH/"><img src="http://robocraft.ru/templates/skin/new/images/avatar_24x24.jpg" alt="avatar" class="avatar"></a>
+								<p><a href="http://robocraft.ru/profile/TuMePJlaH/" class="author">TuMePJlaH</a></p>
+								<ul>
+									<li class="date">18 февраля 2016, 10:38</li>
+																		
+									<li><a href="http://robocraft.ru/blog/algorithm/560.html#comment5379" class="imglink link"></a></li>	
+																		<li class="goto-comment-child hidden"><a href="http://robocraft.ru/blog/algorithm/560.html#" onclick="return lsCmtTree.goToChildComment(this);" title="Обратно к ответу">↓</a></li>
+									   																	
+								</ul>
+							</div>		
+							<div class="comment"><div class="content"><div class="text" id="comment_preview_5379" style="display: none;"></div></div></div>					
+							<div class="reply" id="reply_5379" style="display: none;"></div>	
+								
+							<div class="comment-children" id="comment-children-5379">    
+    				    
+    																		
+					   					        
+    				    
+    				<div class="comment" id="comment_id_5627">
+    												<img src="http://robocraft.ru/templates/skin/new/images/close.gif" alt="+" title="свернуть/развернуть" class="folding">
+							<a name="comment5627"></a>							
+							<div class="voting  guest     ">
+								<div class="total">0</div>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="plus" onclick="lsVote.vote(5627,this,1,&#39;topic_comment&#39;); return false;"></a>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="minus" onclick="lsVote.vote(5627,this,-1,&#39;topic_comment&#39;); return false;"></a>
+							</div>						
+							<div id="comment_content_id_5627" class="content ">								
+															
+								<div class="tb"><div class="tl"><div class="tr"></div></div></div>								
+								<div class="text">
+										
+					    				Поясните пожалуйста, почему?
+																	
+								</div>				
+								<div class="bl"><div class="bb"><div class="br"></div></div></div>
+							</div>							
+							<div class="info">
+								<a href="http://robocraft.ru/profile/Taraun/"><img src="http://robocraft.ru/templates/skin/new/images/avatar_24x24.jpg" alt="avatar" class="avatar"></a>
+								<p><a href="http://robocraft.ru/profile/Taraun/" class="author">Taraun</a></p>
+								<ul>
+									<li class="date">4 февраля 2017, 14:02</li>
+																		
+									<li><a href="http://robocraft.ru/blog/algorithm/560.html#comment5627" class="imglink link"></a></li>	
+																			<li class="goto-comment-parent"><a href="http://robocraft.ru/blog/algorithm/560.html#comment5379" onclick="return lsCmtTree.goToParentComment($(this));" title="Ответ на">↑</a></li>
+																		<li class="goto-comment-child hidden"><a href="http://robocraft.ru/blog/algorithm/560.html#" onclick="return lsCmtTree.goToChildComment(this);" title="Обратно к ответу">↓</a></li>
+									   																	
+								</ul>
+							</div>		
+							<div class="comment"><div class="content"><div class="text" id="comment_preview_5627" style="display: none;"></div></div></div>					
+							<div class="reply" id="reply_5627" style="display: none;"></div>	
+								
+							<div class="comment-children" id="comment-children-5627">    
+    				    
+    																		
+					   					    	
+        				</div></div></div></div>    				    
+    				<div class="comment" id="comment_id_5548">
+    												<img src="http://robocraft.ru/templates/skin/new/images/close.gif" alt="+" title="свернуть/развернуть" class="folding">
+							<a name="comment5548"></a>							
+							<div class="voting  guest     ">
+								<div class="total">0</div>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="plus" onclick="lsVote.vote(5548,this,1,&#39;topic_comment&#39;); return false;"></a>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="minus" onclick="lsVote.vote(5548,this,-1,&#39;topic_comment&#39;); return false;"></a>
+							</div>						
+							<div id="comment_content_id_5548" class="content ">								
+															
+								<div class="tb"><div class="tl"><div class="tr"></div></div></div>								
+								<div class="text">
+										
+					    				Стоит добавить, что в таком виде сеть, как правило, не используется. Необдходимо добавить порог срабатывания (нейроны «смещения»). Без них вряд ли удастся обучить сеть даже простому XORу, не говоря уже о более сложных задачах.<br>
+
+																	
+								</div>				
+								<div class="bl"><div class="bb"><div class="br"></div></div></div>
+							</div>							
+							<div class="info">
+								<a href="http://robocraft.ru/profile/moggiozzi/"><img src="http://robocraft.ru/templates/skin/new/images/avatar_24x24.jpg" alt="avatar" class="avatar"></a>
+								<p><a href="http://robocraft.ru/profile/moggiozzi/" class="author">moggiozzi</a></p>
+								<ul>
+									<li class="date">16 октября 2016, 11:46</li>
+																		
+									<li><a href="http://robocraft.ru/blog/algorithm/560.html#comment5548" class="imglink link"></a></li>	
+																		<li class="goto-comment-child hidden"><a href="http://robocraft.ru/blog/algorithm/560.html#" onclick="return lsCmtTree.goToChildComment(this);" title="Обратно к ответу">↓</a></li>
+									   																	
+								</ul>
+							</div>		
+							<div class="comment"><div class="content"><div class="text" id="comment_preview_5548" style="display: none;"></div></div></div>					
+							<div class="reply" id="reply_5548" style="display: none;"></div>	
+								
+							<div class="comment-children" id="comment-children-5548">    
+    				    
+    																		
+					   					        
+    				    
+    				<div class="comment" id="comment_id_5662">
+    												<img src="http://robocraft.ru/templates/skin/new/images/close.gif" alt="+" title="свернуть/развернуть" class="folding">
+							<a name="comment5662"></a>							
+							<div class="voting  guest     ">
+								<div class="total">0</div>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="plus" onclick="lsVote.vote(5662,this,1,&#39;topic_comment&#39;); return false;"></a>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="minus" onclick="lsVote.vote(5662,this,-1,&#39;topic_comment&#39;); return false;"></a>
+							</div>						
+							<div id="comment_content_id_5662" class="content ">								
+															
+								<div class="tb"><div class="tl"><div class="tr"></div></div></div>								
+								<div class="text">
+										
+					    				Абсолютно верное замечание.
+																	
+								</div>				
+								<div class="bl"><div class="bb"><div class="br"></div></div></div>
+							</div>							
+							<div class="info">
+								<a href="http://robocraft.ru/profile/noonv/"><img src="http://robocraft.ru/uploads/images/2/avatar_24x24.jpg" alt="avatar" class="avatar"></a>
+								<p><a href="http://robocraft.ru/profile/noonv/" class="author">noonv</a></p>
+								<ul>
+									<li class="date">20 марта 2017, 10:18</li>
+																		
+									<li><a href="http://robocraft.ru/blog/algorithm/560.html#comment5662" class="imglink link"></a></li>	
+																			<li class="goto-comment-parent"><a href="http://robocraft.ru/blog/algorithm/560.html#comment5548" onclick="return lsCmtTree.goToParentComment($(this));" title="Ответ на">↑</a></li>
+																		<li class="goto-comment-child hidden"><a href="http://robocraft.ru/blog/algorithm/560.html#" onclick="return lsCmtTree.goToChildComment(this);" title="Обратно к ответу">↓</a></li>
+									   																	
+								</ul>
+							</div>		
+							<div class="comment"><div class="content"><div class="text" id="comment_preview_5662" style="display: none;"></div></div></div>					
+							<div class="reply" id="reply_5662" style="display: none;"></div>	
+								
+							<div class="comment-children" id="comment-children-5662">    
+    				    
+    																		
+					   					    	
+        				</div></div></div></div>    				    
+    				<div class="comment" id="comment_id_5659">
+    												<img src="http://robocraft.ru/templates/skin/new/images/close.gif" alt="+" title="свернуть/развернуть" class="folding">
+							<a name="comment5659"></a>							
+							<div class="voting  guest     ">
+								<div class="total">0</div>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="plus" onclick="lsVote.vote(5659,this,1,&#39;topic_comment&#39;); return false;"></a>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="minus" onclick="lsVote.vote(5659,this,-1,&#39;topic_comment&#39;); return false;"></a>
+							</div>						
+							<div id="comment_content_id_5659" class="content ">								
+															
+								<div class="tb"><div class="tl"><div class="tr"></div></div></div>								
+								<div class="text">
+										
+					    				Исходя из формулы расчета ошибки и формулы расчета нового веса, получается, что если изначально сгенерировать матрицу с нулевыми весами, то её не получится обучить?<br>
+w46 = 0<br>
+d4 = w46*d6 = 0<br>
+Подставляем ноль в формулу вычисления нового веса, где происходит умножение производной от взвешенной сумму на вход и на ошибку, и снова получаем ноль. Вес не поменяется. Я где-то ошибся?<br>
+
+																	
+								</div>				
+								<div class="bl"><div class="bb"><div class="br"></div></div></div>
+							</div>							
+							<div class="info">
+								<a href="http://robocraft.ru/profile/MrGod/"><img src="http://robocraft.ru/templates/skin/new/images/avatar_24x24.jpg" alt="avatar" class="avatar"></a>
+								<p><a href="http://robocraft.ru/profile/MrGod/" class="author">MrGod</a></p>
+								<ul>
+									<li class="date">19 марта 2017, 11:07</li>
+																		
+									<li><a href="http://robocraft.ru/blog/algorithm/560.html#comment5659" class="imglink link"></a></li>	
+																		<li class="goto-comment-child hidden"><a href="http://robocraft.ru/blog/algorithm/560.html#" onclick="return lsCmtTree.goToChildComment(this);" title="Обратно к ответу">↓</a></li>
+									   																	
+								</ul>
+							</div>		
+							<div class="comment"><div class="content"><div class="text" id="comment_preview_5659" style="display: none;"></div></div></div>					
+							<div class="reply" id="reply_5659" style="display: none;"></div>	
+								
+							<div class="comment-children" id="comment-children-5659">    
+    				    
+    																		
+					   					        
+    				    
+    				<div class="comment" id="comment_id_5663">
+    												<img src="http://robocraft.ru/templates/skin/new/images/close.gif" alt="+" title="свернуть/развернуть" class="folding">
+							<a name="comment5663"></a>							
+							<div class="voting  guest     ">
+								<div class="total">0</div>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="plus" onclick="lsVote.vote(5663,this,1,&#39;topic_comment&#39;); return false;"></a>
+								<a href="http://robocraft.ru/blog/algorithm/560.html#" class="minus" onclick="lsVote.vote(5663,this,-1,&#39;topic_comment&#39;); return false;"></a>
+							</div>						
+							<div id="comment_content_id_5663" class="content ">								
+															
+								<div class="tb"><div class="tl"><div class="tr"></div></div></div>								
+								<div class="text">
+										
+					    				Правильное замечание.<br>
+Как уже отметили выше — в данной схеме не хватает сигнала смещения/сдвига (bias) для каждого нейрона (слоя).<br>
+<pre class="prettyprint"><code>f = w*x + b</code></pre><br>
+Bias характеризует значение в нуле (т.е. выполняет «смещение» результата, когда x=0).<br>
+<noindex><a href="https://habrahabr.ru/post/313216/" rel="nofollow">Нейронные сети для начинающих. Часть 2</a></noindex>
+																	
+								</div>				
+								<div class="bl"><div class="bb"><div class="br"></div></div></div>
+							</div>							
+							<div class="info">
+								<a href="http://robocraft.ru/profile/noonv/"><img src="http://robocraft.ru/uploads/images/2/avatar_24x24.jpg" alt="avatar" class="avatar"></a>
+								<p><a href="http://robocraft.ru/profile/noonv/" class="author">noonv</a></p>
+								<ul>
+									<li class="date">20 марта 2017, 10:19</li>
+																		
+									<li><a href="http://robocraft.ru/blog/algorithm/560.html#comment5663" class="imglink link"></a></li>	
+																			<li class="goto-comment-parent"><a href="http://robocraft.ru/blog/algorithm/560.html#comment5659" onclick="return lsCmtTree.goToParentComment($(this));" title="Ответ на">↑</a></li>
+																		<li class="goto-comment-child hidden"><a href="http://robocraft.ru/blog/algorithm/560.html#" onclick="return lsCmtTree.goToChildComment(this);" title="Обратно к ответу">↓</a></li>
+									   																	
+								</ul>
+							</div>		
+							<div class="comment"><div class="content"><div class="text" id="comment_preview_5663" style="display: none;"></div></div></div>					
+							<div class="reply" id="reply_5663" style="display: none;"></div>	
+								
+							<div class="comment-children" id="comment-children-5663">    
+    				    
+    				        				</div></div></div></div>    
+    												
+				<span id="comment-children-0"></span>				
+				<br>
+				
+															Только зарегистрированные и авторизованные пользователи могут оставлять комментарии.<br>
+													
+			</div>
+			<!-- /Comments -->	
+
+<br><br>
+<script type="text/javascript"><!--
+google_ad_client = "pub-9788091858425972";
+/* 468x60, ������� 08.09.09 */
+google_ad_slot = "0477976619";
+google_ad_width = 468;
+google_ad_height = 60;
+//-->
+</script>
+<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js" style="display: none !important;">
+</script>
+
+		</div>
+		<!-- /Content -->
+							<!-- Sidebar -->
+		<div id="sidebar">
+			
+																						
+														<div class="block helper">
+				<div class="tl"><div class="tr"></div></div>
+				<div class="cl"><div class="cr">
+				<!-- Место для рекламы -->
+				
+				<div style=" position: relative; text-align: center;">
+					<!-- <a href="http://amperka.ru/banner_rbcrft" target="_blank"><img src="http://robocraft.ru/templates/skin/new/images/banner/robonyasha.jpg" alt="Робоняша" title="Робоняша" /></a> -->
+
+<script type="text/javascript" src="https://escense.ru/robocraft.php?size=250x250&amp;dp=robocraft" style="display: none !important;"></script>
+
+
+				
+<!-- Yandex.RTB R-A-61645-2 -->
+<div id="yandex_rtb_R-A-61645-2"></div>
+<script type="text/javascript">
+    (function(w, d, n, s, t) {
+        w[n] = w[n] || [];
+        w[n].push(function() {
+            Ya.Context.AdvManager.render({
+                blockId: "R-A-61645-2",
+                renderTo: "yandex_rtb_R-A-61645-2",
+                async: true
+            });
+        });
+        t = d.getElementsByTagName("script")[0];
+        s = d.createElement("script");
+        s.type = "text/javascript";
+        s.src = "//an.yandex.ru/system/context.js";
+        s.async = true;
+        t.parentNode.insertBefore(s, t);
+    })(this, this.document, "yandexContextAsyncCallbacks");
+</script>
+					
+				</div>
+				
+				<br>
+				</div></div>
+				<div class="bl"><div class="br"></div></div>
+			</div>
+			 
+															
+																			
+														<div class="block blogs">
+				<div class="tl"><div class="tr"></div></div>
+				<div class="cl"><div class="cr">
+					
+					<h1>Блоги</h1>
+					
+					<ul class="block-nav">
+						<li class="active"><strong></strong><a href="http://robocraft.ru/blog/algorithm/560.html#" id="block_blogs_top" onclick="lsBlockBlogs.toggle(this,&#39;blogs_top&#39;); return false;">Топ</a><em></em></li>
+											</ul>
+					
+					<div class="block-content">
+					<!-- 
+						<script language="JavaScript" type="text/javascript">
+						var lsBlockBlogs;
+						window.addEvent('domready', function() {       
+							lsBlockBlogs=new lsBlockLoaderClass();
+						});
+						</script>
+					 -->
+										<ul class="list">
+													<li><div class="total">13.70</div><a href="http://robocraft.ru/blog/arduino/" class="stream-author">Arduino</a></li>						
+													<li><div class="total">10.37</div><a href="http://robocraft.ru/blog/computervision/" class="stream-author">Компьютерное зрение</a></li>						
+													<li><div class="total">8.03</div><a href="http://robocraft.ru/blog/ARM/" class="stream-author">ARM</a></li>						
+													<li><div class="total">5.73</div><a href="http://robocraft.ru/blog/algorithm/" class="stream-author">Программирование</a></li>						
+													<li><div class="total">5.05</div><a href="http://robocraft.ru/blog/projects/" class="stream-author">Проекты и идеи</a></li>						
+													<li><div class="total">3.04</div><a href="http://robocraft.ru/blog/RoboCraft/" class="stream-author">RoboCraft</a></li>						
+													<li><div class="total">2.37</div><a href="http://robocraft.ru/blog/technology/" class="stream-author">Технологии</a></li>						
+													<li><div class="total">2.27</div><a href="http://robocraft.ru/blog/mechanics/" class="stream-author">Механика</a></li>						
+													<li><div class="total">2.26</div><a href="http://robocraft.ru/blog/electronics/" class="stream-author">Электроника</a></li>						
+													<li><div class="total">1.55</div><a href="http://robocraft.ru/blog/news/" class="stream-author">Новости</a></li>						
+													<li><div class="total">1.14</div><a href="http://robocraft.ru/blog/communication/" class="stream-author">Коммуникации</a></li>						
+													<li><div class="total">1.13</div><a href="http://robocraft.ru/blog/beam/" class="stream-author">BEAM роботы</a></li>						
+													<li><div class="total">0.00</div><a href="http://robocraft.ru/blog/sensor/" class="stream-author">Сенсоры и датчики</a></li>						
+											</ul>				
+					</div>
+					
+					<div class="right"><a href="http://robocraft.ru/blogs/">Все блоги</a></div>
+
+					
+				</div></div>
+				<div class="bl"><div class="br"></div></div>
+			</div> 
+															
+																			
+														<div class="block stream">
+
+				<div class="tl"><div class="tr"></div></div>
+				<div class="cl"><div class="cr">
+					
+					<h1>Прямой эфир</h1>
+					
+					<ul class="block-nav">						
+						<li><strong></strong><a href="http://robocraft.ru/blog/algorithm/560.html#" id="block_stream_topic" onclick="lsBlockStream.toggle(this,&#39;topic_stream&#39;); return false;">Публикации</a></li>
+						<li class="active"><a href="http://robocraft.ru/blog/algorithm/560.html#" id="block_stream_comment" onclick="lsBlockStream.toggle(this,&#39;comment_stream&#39;); return false;">Комментарии</a><em></em></li>
+					</ul>					
+					
+					<div class="block-content">
+					<!-- 
+						<script language="JavaScript" type="text/javascript">
+						var lsBlockStream;
+						window.addEvent('domready', function() { 
+							lsBlockStream=new lsBlockLoaderClass();      						
+						});
+						</script>
+					 -->
+										<ul class="stream-content">
+													<li class="even">
+								<a href="http://robocraft.ru/profile/Stefan/" class="stream-author">Stefan</a>&nbsp;→
+								<span class="stream-comment-icon"></span><a href="http://robocraft.ru/blog/3063.html#comment5833" class="stream-comment">У Вас есть Arduino? Значит у Вас есть программатор!</a>
+								<span> 12</span> в <a href="http://robocraft.ru/my/Ghost_D/" class="stream-blog">Блог им. Ghost_D</a>
+							</li>						
+													<li>
+								<a href="http://robocraft.ru/profile/tiho82/" class="stream-author">tiho82</a>&nbsp;→
+								<span class="stream-comment-icon"></span><a href="http://robocraft.ru/blog/mechanics/595.html#comment5830" class="stream-comment">Хаки сервомашинок. Переделка в серву постоянного вращения</a>
+								<span> 10</span> в <a href="http://robocraft.ru/blog/mechanics/" class="stream-blog">Механика</a>
+							</li>						
+													<li class="even">
+								<a href="http://robocraft.ru/profile/SergFF/" class="stream-author">SergFF</a>&nbsp;→
+								<span class="stream-comment-icon"></span><a href="http://robocraft.ru/blog/1002.html#comment5829" class="stream-comment">Дополнение к статье "Делаем ISP-программатор из Arduino"</a>
+								<span> 4</span> в <a href="http://robocraft.ru/my/TRAHOMOTO/" class="stream-blog">Блог им. TRAHOMOTO</a>
+							</li>						
+													<li>
+								<a href="http://robocraft.ru/profile/ToHuK13/" class="stream-author">ToHuK13</a>&nbsp;→
+								<span class="stream-comment-icon"></span><a href="http://robocraft.ru/blog/arduino/302.html#comment5828" class="stream-comment">Arduino и 1-Wire - эмуляция ведомого устройства с помощью библиотеки OneWireSlave</a>
+								<span> 13</span> в <a href="http://robocraft.ru/blog/arduino/" class="stream-blog">Arduino</a>
+							</li>						
+													<li class="even">
+								<a href="http://robocraft.ru/profile/admin/" class="stream-author">admin</a>&nbsp;→
+								<span class="stream-comment-icon"></span><a href="http://robocraft.ru/blog/computervision/275.html#comment5827" class="stream-comment">7. OpenCV шаг за шагом. Захват видео с камеры</a>
+								<span> 59</span> в <a href="http://robocraft.ru/blog/computervision/" class="stream-blog">Компьютерное зрение</a>
+							</li>						
+													<li>
+								<a href="http://robocraft.ru/profile/Vytautas/" class="stream-author">Vytautas</a>&nbsp;→
+								<span class="stream-comment-icon"></span><a href="http://robocraft.ru/blog/3161.html#comment5826" class="stream-comment">Солнечное электроснабжение на даче или шилд-контроллер заряда. Своими руками :)</a>
+								<span> 36</span> в <a href="http://robocraft.ru/my/Ghost_D/" class="stream-blog">Блог им. Ghost_D</a>
+							</li>						
+													<li class="even">
+								<a href="http://robocraft.ru/profile/noonv/" class="stream-author">noonv</a>&nbsp;→
+								<span class="stream-comment-icon"></span><a href="http://robocraft.ru/blog/computervision/266.html#comment5824" class="stream-comment">3. OpenCV шаг за шагом. Hello World.</a>
+								<span> 20</span> в <a href="http://robocraft.ru/blog/computervision/" class="stream-blog">Компьютерное зрение</a>
+							</li>						
+													<li>
+								<a href="http://robocraft.ru/profile/itsterit/" class="stream-author">itsterit</a>&nbsp;→
+								<span class="stream-comment-icon"></span><a href="http://robocraft.ru/blog/3043.html#comment5822" class="stream-comment">Работа с EEPROM в AVR-GCC</a>
+								<span> 1</span> в <a href="http://robocraft.ru/my/shadowalker/" class="stream-blog">Блог им. shadowalker</a>
+							</li>						
+													<li class="even">
+								<a href="http://robocraft.ru/profile/AntSovet/" class="stream-author">AntSovet</a>&nbsp;→
+								<span class="stream-comment-icon"></span><a href="http://robocraft.ru/blog/3996.html#comment5821" class="stream-comment">Механика роботов. Окончательное решение проблемы</a>
+								<span> 2</span> в <a href="http://robocraft.ru/my/AntSovet/" class="stream-blog">Блог им. AntSovet</a>
+							</li>						
+													<li>
+								<a href="http://robocraft.ru/profile/Slavajun/" class="stream-author">Slavajun</a>&nbsp;→
+								<span class="stream-comment-icon"></span><a href="http://robocraft.ru/blog/electronics/3131.html#comment5819" class="stream-comment">Raspberry Pi. Установка и настройка комплекта MTC Коннект 4 (модем Huawei E171) на Raspbian</a>
+								<span> 22</span> в <a href="http://robocraft.ru/blog/electronics/" class="stream-blog">Электроника</a>
+							</li>						
+													<li class="even">
+								<a href="http://robocraft.ru/profile/SERGEY1973/" class="stream-author">SERGEY1973</a>&nbsp;→
+								<span class="stream-comment-icon"></span><a href="http://robocraft.ru/blog/2948.html#comment5818" class="stream-comment">Делаем простой USB программатор USBTinyISP</a>
+								<span> 58</span> в <a href="http://robocraft.ru/my/Ghost_D/" class="stream-blog">Блог им. Ghost_D</a>
+							</li>						
+													<li>
+								<a href="http://robocraft.ru/profile/gori-gori/" class="stream-author">gori-gori</a>&nbsp;→
+								<span class="stream-comment-icon"></span><a href="http://robocraft.ru/blog/arduino/124.html#comment5816" class="stream-comment">Arduino/CraftDuino и эмулятор iButton ;)</a>
+								<span> 13</span> в <a href="http://robocraft.ru/blog/arduino/" class="stream-blog">Arduino</a>
+							</li>						
+													<li class="even">
+								<a href="http://robocraft.ru/profile/Guron/" class="stream-author">Guron</a>&nbsp;→
+								<span class="stream-comment-icon"></span><a href="http://robocraft.ru/blog/technology/968.html#comment5815" class="stream-comment">Управление роботом-пылесосом iRobot Roomba с помощью Arduino</a>
+								<span> 10</span> в <a href="http://robocraft.ru/blog/technology/" class="stream-blog">Технологии</a>
+							</li>						
+													<li>
+								<a href="http://robocraft.ru/profile/Vasiliy/" class="stream-author">Vasiliy</a>&nbsp;→
+								<span class="stream-comment-icon"></span><a href="http://robocraft.ru/blog/3413.html#comment5813" class="stream-comment">Контроллер заряда от солнечной панели. Работа над ошибками</a>
+								<span> 9</span> в <a href="http://robocraft.ru/my/Ghost_D/" class="stream-blog">Блог им. Ghost_D</a>
+							</li>						
+													<li class="even">
+								<a href="http://robocraft.ru/profile/sWintUs/" class="stream-author">sWintUs</a>&nbsp;→
+								<span class="stream-comment-icon"></span><a href="http://robocraft.ru/blog/ARM/739.html#comment5812" class="stream-comment">STM32: Урок 6.2 - Таймеры общего назначения и продвинутые</a>
+								<span> 39</span> в <a href="http://robocraft.ru/blog/ARM/" class="stream-blog">ARM</a>
+							</li>						
+													<li>
+								<a href="http://robocraft.ru/profile/Dmitriy_S/" class="stream-author">Dmitriy_S</a>&nbsp;→
+								<span class="stream-comment-icon"></span><a href="http://robocraft.ru/blog/3002.html#comment5810" class="stream-comment">LAN тестер. Полезное  устройство своими руками</a>
+								<span> 48</span> в <a href="http://robocraft.ru/my/Ghost_D/" class="stream-blog">Блог им. Ghost_D</a>
+							</li>						
+													<li class="even">
+								<a href="http://robocraft.ru/profile/sWintUs/" class="stream-author">sWintUs</a>&nbsp;→
+								<span class="stream-comment-icon"></span><a href="http://robocraft.ru/blog/ARM/653.html#comment5809" class="stream-comment">STM32: Урок 1 - Настраиваем IDE</a>
+								<span> 156</span> в <a href="http://robocraft.ru/blog/ARM/" class="stream-blog">ARM</a>
+							</li>						
+													<li>
+								<a href="http://robocraft.ru/profile/myfriend/" class="stream-author">myfriend</a>&nbsp;→
+								<span class="stream-comment-icon"></span><a href="http://robocraft.ru/blog/arduino/618.html#comment5806" class="stream-comment">Каскад входных сдвиговых регистров</a>
+								<span> 15</span> в <a href="http://robocraft.ru/blog/arduino/" class="stream-blog">Arduino</a>
+							</li>						
+													<li class="even">
+								<a href="http://robocraft.ru/profile/JIEXA/" class="stream-author">JIEXA</a>&nbsp;→
+								<span class="stream-comment-icon"></span><a href="http://robocraft.ru/blog/mechanics/756.html#comment5804" class="stream-comment">Кинематика: прямая и обратная задачи</a>
+								<span> 7</span> в <a href="http://robocraft.ru/blog/mechanics/" class="stream-blog">Механика</a>
+							</li>						
+													<li>
+								<a href="http://robocraft.ru/profile/Yuliia_Dziuba/" class="stream-author">Yuliia_Dziuba</a>&nbsp;→
+								<span class="stream-comment-icon"></span><a href="http://robocraft.ru/blog/computervision/484.html#comment5801" class="stream-comment">27. OpenCV шаг за шагом. Обработка изображения - детектор границ Кенни (Canny)</a>
+								<span> 28</span> в <a href="http://robocraft.ru/blog/computervision/" class="stream-blog">Компьютерное зрение</a>
+							</li>						
+										
+					</ul>
+					</div>
+					<div class="right"><a href="http://robocraft.ru/comments/">Весь эфир</a> | <a href="http://robocraft.ru/rss/allcomments/">RSS</a></div>
+
+					
+				</div></div>
+				<div class="bl"><div class="br"></div></div>
+			</div>
+ 
+															
+																			
+														<div class="block tags">
+				<div class="tl"><div class="tr"></div></div>
+				<div class="cl"><div class="cr">
+					
+					<ul class="cloud">
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/3D/">3D</a></li>	
+													<li><a class="w5" rel="tag" href="http://robocraft.ru/tag/3D-%D0%BF%D0%B5%D1%87%D0%B0%D1%82%D1%8C/">3D-печать</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/AI/">AI</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/Android/">Android</a></li>	
+													<li><a class="w10" rel="tag" href="http://robocraft.ru/tag/Arduino/">Arduino</a></li>	
+													<li><a class="w1" rel="tag" href="http://robocraft.ru/tag/AVR/">AVR</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/Bluetooth/">Bluetooth</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/CraftDuino/">CraftDuino</a></li>	
+													<li><a class="w1" rel="tag" href="http://robocraft.ru/tag/DARPA/">DARPA</a></li>	
+													<li><a class="w4" rel="tag" href="http://robocraft.ru/tag/DIY/">DIY</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/IDE/">IDE</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/iRobot/">iRobot</a></li>	
+													<li><a class="w1" rel="tag" href="http://robocraft.ru/tag/Kickstarter/">Kickstarter</a></li>	
+													<li><a class="w3" rel="tag" href="http://robocraft.ru/tag/Kinect/">Kinect</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/LEGO/">LEGO</a></li>	
+													<li><a class="w1" rel="tag" href="http://robocraft.ru/tag/Linux/">Linux</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/Open%20Source/">Open Source</a></li>	
+													<li><a class="w5" rel="tag" href="http://robocraft.ru/tag/OpenCV/">OpenCV</a></li>	
+													<li><a class="w3" rel="tag" href="http://robocraft.ru/tag/Python/">Python</a></li>	
+													<li><a class="w5" rel="tag" href="http://robocraft.ru/tag/Raspberry%20Pi/">Raspberry Pi</a></li>	
+													<li><a class="w3" rel="tag" href="http://robocraft.ru/tag/RoboCraft/">RoboCraft</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/Roomba/">Roomba</a></li>	
+													<li><a class="w6" rel="tag" href="http://robocraft.ru/tag/ROS/">ROS</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/swarm/">swarm</a></li>	
+													<li><a class="w1" rel="tag" href="http://robocraft.ru/tag/URBI/">URBI</a></li>	
+													<li><a class="w1" rel="tag" href="http://robocraft.ru/tag/web-%D0%BA%D0%B0%D0%BC%D0%B5%D1%80%D0%B0/">web-камера</a></li>	
+													<li><a class="w5" rel="tag" href="http://robocraft.ru/tag/%D0%B0%D0%B2%D1%82%D0%BE%D0%BC%D0%B0%D1%82%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F/">автоматизация</a></li>	
+													<li><a class="w3" rel="tag" href="http://robocraft.ru/tag/%D0%B0%D0%BD%D0%B4%D1%80%D0%BE%D0%B8%D0%B4/">андроид</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/%D0%B1%D0%B0%D0%BB%D0%B0%D0%BD%D1%81%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D1%82%D1%8C/">балансировать</a></li>	
+													<li><a class="w6" rel="tag" href="http://robocraft.ru/tag/%D0%B1%D0%B8%D0%BE%D0%BD%D0%B8%D0%BA%D0%B0/">бионика</a></li>	
+													<li><a class="w3" rel="tag" href="http://robocraft.ru/tag/%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F/">версия</a></li>	
+													<li><a class="w5" rel="tag" href="http://robocraft.ru/tag/%D0%B2%D0%B8%D0%B4%D0%B5%D0%BE/">видео</a></li>	
+													<li><a class="w5" rel="tag" href="http://robocraft.ru/tag/%D0%B2%D0%BE%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9/">военный</a></li>	
+													<li><a class="w1" rel="tag" href="http://robocraft.ru/tag/%D0%B2%D0%BE%D0%BF%D1%80%D0%BE%D1%81/">вопрос</a></li>	
+													<li><a class="w1" rel="tag" href="http://robocraft.ru/tag/%D0%B3%D0%BE%D0%BB%D0%BE%D1%81/">голос</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/%D0%B4%D0%B0%D1%82%D1%87%D0%B8%D0%BA/">датчик</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/%D0%B4%D1%80%D0%BE%D0%BD/">дрон</a></li>	
+													<li><a class="w1" rel="tag" href="http://robocraft.ru/tag/%D0%B7%D1%80%D0%B5%D0%BD%D0%B8%D0%B5/">зрение</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/%D0%B8%D0%B3%D1%80%D0%B0/">игра</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/%D0%98%D0%9A/">ИК</a></li>	
+													<li><a class="w1" rel="tag" href="http://robocraft.ru/tag/%D0%B8%D0%BD%D1%81%D1%82%D0%B0%D0%BB%D0%BB%D1%8F%D1%86%D0%B8%D1%8F/">инсталляция</a></li>	
+													<li><a class="w1" rel="tag" href="http://robocraft.ru/tag/%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82/">интернет</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D1%84%D0%B5%D0%B9%D1%81/">интерфейс</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/%D0%BA%D0%B0%D0%BC%D0%B5%D1%80%D0%B0/">камера</a></li>	
+													<li><a class="w6" rel="tag" href="http://robocraft.ru/tag/%D0%BA%D0%B8%D0%B1%D0%B5%D1%80%D0%B2%D0%B5%D1%81%D0%BD%D0%B0/">кибервесна</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/%D0%BA%D0%BE%D0%BD%D0%BA%D1%83%D1%80%D1%81/">конкурс</a></li>	
+													<li><a class="w5" rel="tag" href="http://robocraft.ru/tag/%D0%BC%D0%B0%D0%BD%D0%B8%D0%BF%D1%83%D0%BB%D1%8F%D1%82%D0%BE%D1%80/">манипулятор</a></li>	
+													<li><a class="w4" rel="tag" href="http://robocraft.ru/tag/%D0%BC%D0%B0%D1%88%D0%B8%D0%BD%D0%BD%D0%BE%D0%B5%20%D0%BE%D0%B1%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5/">машинное обучение</a></li>	
+													<li><a class="w1" rel="tag" href="http://robocraft.ru/tag/%D0%BC%D0%BE%D0%B4%D1%83%D0%BB%D1%8C/">модуль</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/%D0%BC%D1%83%D0%B7%D1%8B%D0%BA%D0%B0/">музыка</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/%D0%BD%D0%B0%D1%88%D0%B5/">наше</a></li>	
+													<li><a class="w4" rel="tag" href="http://robocraft.ru/tag/%D0%BD%D0%B5%D0%B9%D1%80%D0%BE%D0%BD%D0%BD%D0%B0%D1%8F%20%D1%81%D0%B5%D1%82%D1%8C/">нейронная сеть</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/%D0%BF%D0%BE%D0%B4%D0%B2%D0%BE%D0%B4%D0%BD%D1%8B%D0%B9/">подводный</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/%D0%BF%D1%8B%D0%BB%D0%B5%D1%81%D0%BE%D1%81/">пылесос</a></li>	
+													<li><a class="w4" rel="tag" href="http://robocraft.ru/tag/%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%B0/">работа</a></li>	
+													<li><a class="w3" rel="tag" href="http://robocraft.ru/tag/%D1%80%D0%B0%D1%81%D0%BF%D0%BE%D0%B7%D0%BD%D0%B0%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5/">распознавание</a></li>	
+													<li><a class="w10" rel="tag" href="http://robocraft.ru/tag/%D1%80%D0%BE%D0%B1%D0%BE%D1%82/">робот</a></li>	
+													<li><a class="w7" rel="tag" href="http://robocraft.ru/tag/%D1%80%D0%BE%D0%B1%D0%BE%D1%82%D0%BE%D1%82%D0%B5%D1%85%D0%BD%D0%B8%D0%BA%D0%B0/">робототехника</a></li>	
+													<li><a class="w1" rel="tag" href="http://robocraft.ru/tag/%D1%80%D1%83%D0%BA%D0%B0/">рука</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/%D1%81%D0%B2%D0%B5%D1%82%D0%BE%D0%B4%D0%B8%D0%BE%D0%B4/">светодиод</a></li>	
+													<li><a class="w6" rel="tag" href="http://robocraft.ru/tag/%D1%81%D0%B5%D1%80%D0%B2%D0%BE%D0%BC%D0%B0%D1%88%D0%B8%D0%BD%D0%BA%D0%B0/">сервомашинка</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/%D1%81%D0%BE%D0%B1%D0%B0%D0%BA%D0%B0/">собака</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/%D1%82%D0%B5%D0%BB%D0%B5%D0%BF%D1%80%D0%B8%D1%81%D1%83%D1%82%D1%81%D1%82%D0%B2%D0%B8%D0%B5/">телеприсутствие</a></li>	
+													<li><a class="w1" rel="tag" href="http://robocraft.ru/tag/%D0%A3%D0%97/">УЗ</a></li>	
+													<li><a class="w4" rel="tag" href="http://robocraft.ru/tag/%D1%83%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5/">управление</a></li>	
+													<li><a class="w4" rel="tag" href="http://robocraft.ru/tag/%D1%85%D0%BE%D0%B4%D0%B8%D1%82%D1%8C/">ходить</a></li>	
+													<li><a class="w3" rel="tag" href="http://robocraft.ru/tag/%D1%88%D0%B0%D0%B3%20%D0%B7%D0%B0%20%D1%88%D0%B0%D0%B3%D0%BE%D0%BC/">шаг за шагом</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/%D1%88%D0%B0%D0%B3%D0%BE%D0%B2%D1%8B%D0%B9%20%D0%B4%D0%B2%D0%B8%D0%B3%D0%B0%D1%82%D0%B5%D0%BB%D1%8C/">шаговый двигатель</a></li>	
+													<li><a class="w2" rel="tag" href="http://robocraft.ru/tag/%D1%88%D0%B8%D0%BB%D0%B4/">шилд</a></li>	
+													<li><a class="w1" rel="tag" href="http://robocraft.ru/tag/%D1%8E%D0%BC%D0%BE%D1%80/">юмор</a></li>	
+											</ul>
+					
+				</div></div>
+				<div class="bl"><div class="br"></div></div>
+			</div> 
+															
+							
+					
+			
+		</div>
+		<!-- /Sidebar -->				
+	</div>
+
+<!-- Footer -->
+<div id="footer">
+
+	<ul class="footer-list">
+				<li class="footer-list-header word-wrap">Вы можете</li>
+		<li><a class="js-registration-form-show" href="http://robocraft.ru/registration/">Зарегистрироваться</a></li>
+		<li><a class="js-login-form-show sign-in" href="http://robocraft.ru/login/">Войти</a></li>
+			</ul>
+	
+	<ul class="footer-list">
+		<li class="footer-list-header">Разделы</li>
+		<li><a href="http://robocraft.ru/">Топики</a></li>
+		<li><a href="http://robocraft.ru/blogs/">Блоги</a></li>
+		<li><a href="http://robocraft.ru/people/">Люди</a></li>
+		<li><a href="http://robocraft.ru/shop/">Наш Магазин</a></li>
+		<li><a href="http://robocraft.ru/forum/">Форум</a></li>
+	</ul>
+	
+	<ul class="footer-list">
+		<li class="footer-list-header">Инфо</li>
+		<li><a href="http://robocraft.ru/page/about">О сайте</a></li>
+		<li><a href="http://robocraft.ru/page/about/#rules">Правила</a></li>
+		<li><a href="http://robocraft.ru/page/summary">Статьи</a></li>
+		<li><a href="http://robocraft.ru/page/faq">FAQ</a></li>
+		<li><a href="http://robocraft.ru/page/privacy-policy">Политика Конфиденциальности</a></li>
+	</ul>
+	
+	<div class="copyright">
+	© Сайт работает на <a href="http://livestreet.ru/" target="_blank">LiveStreet</a>
+		<div>
+			© 2009-2020
+		</div>
+		<div>
+
+<!--Rating@Mail.ru counter-->
+<script type="text/javascript"><!--
+d=document;var a='';a+=';r='+escape(d.referrer);js=10;//--></script>
+<script language="javascript1.1" type="text/javascript"><!--
+a+=';j='+navigator.javaEnabled();js=11;//--></script>
+<script language="javascript1.2" type="text/javascript"><!--
+s=screen;a+=';s='+s.width+'*'+s.height;
+a+=';d='+(s.colorDepth?s.colorDepth:s.pixelDepth);js=12;//--></script>
+<script language="javascript1.3" type="text/javascript"><!--
+js=13;//--></script><script language="javascript" type="text/javascript"><!--
+d.write('<a href="http://top.mail.ru/jump?from=1656615" target="_top">'+
+'<img src="http://d7.c4.b9.a1.top.mail.ru/counter?id=1656615;t=94;js='+js+
+a+';rand='+Math.random()+'" alt="Рейтинг@Mail.ru" border="0" '+
+'height="18" width="88"><\/a>');if(11<js)d.write('<'+'!-- ');//--></script><a href="http://top.mail.ru/jump?from=1656615" target="_top"><img src="./Нейронная сеть - обучение ИНС с помощью алгоритма обратного распространения _ Программирование _ RoboCraft. Роботы_ Это просто!_files/c" alt="Рейтинг@Mail.ru" border="0" height="18" width="88" style="display: none !important;"></a><!-- 
+<noscript><a target="_top" href="http://top.mail.ru/jump?from=1656615">
+<img src="http://d7.c4.b9.a1.top.mail.ru/counter?js=na;id=1656615;t=94" 
+height="18" width="88" border="0" alt="Рейтинг@Mail.ru"></a></noscript>
+<script language="javascript" type="text/javascript"><!--
+if(11<js)d.write('--'+'>');//-->
+<!--// Rating@Mail.ru counter-->
+
+		&nbsp;				 	
+		<a href="http://idea2.ru/" title="Идеи 2.0" target="_blank"><img src="http://idea2.ru/i2.png"></a>&nbsp;
+		<a href="http://robocraft.ru/" title="RoboCraft" target="_blank"><img src="http://robocraft.ru/rc.png"></a>		
+		</div>
+	</div>
+
+	<div>Материалы сайта являются авторскими. Копирование и публикация материалов без разрешения запрещены! &nbsp;
+	</div>
+		
+</div>
+
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="http://www.google-analytics.com/ga.js" type="text/javascript"></script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-12745905-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+<!--
+<script type="text/javascript" src="http://robocraft.ru/classes/lib/external/MooTools_1.2/mootools-1.2.js?v=1.2.2"></script>
+<script type="text/javascript" src="http://robocraft.ru/classes/lib/external/MooTools_1.2/plugs/Roal/Roar.js"></script>
+<script type="text/javascript" src="http://robocraft.ru/classes/lib/external/MooTools_1.2/plugs/Autocompleter/Observer.js"></script>
+<script type="text/javascript" src="http://robocraft.ru/classes/lib/external/MooTools_1.2/plugs/Autocompleter/Autocompleter.js"></script>
+<script type="text/javascript" src="http://robocraft.ru/classes/lib/external/MooTools_1.2/plugs/Autocompleter/Autocompleter.Request.js"></script>
+<!--[if IE]>
+	<script type="text/javascript" src="http://robocraft.ru/classes/lib/external/MooTools_1.2/plugs/Piechart/moocanvas.js"></script>
+<![endif]-->
+<!--
+<script type="text/javascript" src="http://robocraft.ru/classes/lib/external/MooTools_1.2/plugs/Piechart/piechart.js"></script>
+
+<script type="text/javascript" src="http://robocraft.ru/templates/skin/new/js/vote.js"></script>
+<script type="text/javascript" src="http://robocraft.ru/templates/skin/new/js/favourites.js"></script>
+<script type="text/javascript" src="http://robocraft.ru/templates/skin/new/js/questions.js"></script>
+<script type="text/javascript" src="http://robocraft.ru/templates/skin/new/js/block_loader.js"></script>
+<script type="text/javascript" src="http://robocraft.ru/templates/skin/new/js/friend.js"></script>
+<script type="text/javascript" src="http://robocraft.ru/templates/skin/new/js/blog.js"></script>
+<script type="text/javascript" src="http://robocraft.ru/templates/skin/new/js/other.js"></script>
+<script type="text/javascript" src="http://robocraft.ru/templates/skin/new/js/login.js"></script>
+<script type="text/javascript" src="http://robocraft.ru/templates/skin/new/js/panel.js"></script>
+-->
+
+
+
+</div></body></html>
