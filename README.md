@@ -8,6 +8,9 @@
 * ### Неделя 2
   * #### [Метод главных компонент](https://github.com/alimar05/Machine_learning_and_data_analysis/blob/master/Поиск%20структуры%20в%20данных/Неделя%202/Метод%20главных%20компонент/PCA.ipynb)
 
+* ### Неделя 3
+  * #### [Визуализация данных](https://github.com/alimar05/Machine_learning_and_data_analysis/blob/master/Поиск%20структуры%20в%20данных/Неделя%203/Визуализация%20данных/VisualizationPeerReview.ipynb)
+
 ## Обучение на размеченных данных
 
 * ### Неделя 1
