@@ -10,6 +10,9 @@
 
 * ### Неделя 3
   * #### [Визуализация данных](https://github.com/alimar05/Machine_learning_and_data_analysis/blob/master/Поиск%20структуры%20в%20данных/Неделя%203/Визуализация%20данных/VisualizationPeerReview.ipynb)
+  
+* ### Неделя 4
+  * #### [Поиск структуры в данных](https://github.com/alimar05/Machine_learning_and_data_analysis/blob/master/Поиск%20структуры%20в%20данных/Неделя%204/Тематическое%20моделирование/edit_CookingLDA_PA_Coursera.ipynb)
 
 ## Обучение на размеченных данных
 
